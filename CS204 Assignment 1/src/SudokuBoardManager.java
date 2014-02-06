@@ -24,10 +24,38 @@ public class SudokuBoardManager implements SudokuBoardManagerInterface
 	public int[] displayPossibleValues(int r, int c)
 			throws InputOutOfRangeException
 	{
-
-		return null;
+		int[] invalidValues = new int[27];
+		int[] validValues = new int[9];
+		int j=0;
+		
+		for(int i=0; i<9; i++)
+		{
+			if(gameData[r-1][i] !=0)
+				invalidValues[j++] = gameData[r-1][i];
+		}
+		
+		for(int i=0; i<9; i++)
+		{
+			if(gameData[i][c-1] !=0)
+				invalidValues[j++] = gameData[r-1][i];
+		}
+		
+		for(int i=0, k=0; i<9; i++)
+		{
+			if(!findValue(i, invalidValues))
+				validValues[k++] = i;
+		}
+		return validValues;
 	}
 
+	private boolean findValue(int v, int[] a)
+	{
+		for(int e : a)
+			if(e==v)
+				return true;
+		return false;
+	}
+	
 	public void newGame(File gameFile)
 	{
 		Scanner inputFile = null;
