@@ -1,8 +1,10 @@
 import javax.swing.*;
+import javax.swing.border.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Scanner;
 
 
 public class SudokuPanel extends JPanel
@@ -16,12 +18,16 @@ public class SudokuPanel extends JPanel
 	private JButton display;
 	private JButton newGame;
 	private JButton exit;
+	private Border border;
+	private Border[][] borders;
+	private SudokuBoardManager manager;
 	
 	
 	public SudokuPanel()
 	{
 		buildBoardPanel();
 		buildInterfacePanel();
+		newGame();
 	}
 	
 	private void buildBoardPanel()
@@ -30,10 +36,10 @@ public class SudokuPanel extends JPanel
 		JPanel columnPanel = new JPanel();
 		JPanel rowPanel = new JPanel();
 		JPanel cellPanel = new JPanel();
-		
 		columnLabels = new JLabel[9];
 		rowLabels = new JLabel[9];
 		cells = new JTextField[9][9];
+		borders = new Border[9][9];
 		
 		boardPanel.setLayout(new BorderLayout());
 		
@@ -64,19 +70,27 @@ public class SudokuPanel extends JPanel
 		for(JLabel l : rowLabels)
 			rowPanel.add(l);
 		
-		for(JTextField[] t : cells)
+		for(int i=0; i<9; i++)
 		{
-			for(JTextField f : t)
+			for(int j=0; j<9; j++)
 			{
-				f = new JTextField(2);
-				f.setEditable(false);
-				f.setBackground(Color.WHITE);
-				f.addMouseListener(new FieldListener());
-				cellPanel.add(f);
+				cells[i][j] = new JTextField(2);
+				cells[i][j].setEditable(false);
+				cells[i][j].setBackground(Color.WHITE);	
+				
+				if((i==0 || i==1 || i==2) && (j==0 || j==1 || j==2 || j==6 || j==7 || j==8) || 
+						(i==6 || i==7 || i==8) && (j==0 || j==1 || j==2 || j==6 || j==7 || j==8) ||
+						((i==3 || i==4 || i==5) && (j==3 || j==4 || j==5)))
+					cells[i][j].setBackground(Color.YELLOW);
+				
+				cells[i][j].addMouseListener(new FieldListener());
+				cells[i][j].setActionCommand("" + i + j);
+				borders[i][j] = cells[i][j].getBorder();
+				cellPanel.add(cells[i][j]);
 			}
 		}
 		
-
+		border = cells[0][0].getBorder();
 		boardPanel.add(columnPanel, BorderLayout.NORTH);
 		boardPanel.add(rowPanel, BorderLayout.WEST);
 		boardPanel.add(cellPanel, BorderLayout.CENTER);
@@ -160,6 +174,35 @@ public class SudokuPanel extends JPanel
 		add(bottomPanel);
 	}
 	
+	private void enterNumber()
+	{
+		
+	}
+	
+	private void displayValues()
+	{
+		
+	}
+	
+	private void newGame()
+	{
+		manager = new SudokuBoardManager();
+		manager.newGame(getFile());
+	}
+	
+	private File getFile()
+	{
+		File selectedFile = null;
+		//File chooser to select the file
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogTitle("Select a Game File");
+		//If the "open" option is chosen in the FileChooser
+		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+			//File object with the selected file
+			selectedFile = chooser.getSelectedFile();
+		return selectedFile;
+	}
+	
 	private class ButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -167,8 +210,14 @@ public class SudokuPanel extends JPanel
 			switch(e.getActionCommand().charAt(0))
 			{
 				case 'e':
+					enterNumber();
+					break;
 				case 'd':
+					displayValues();
+					break;
 				case 'n':
+					newGame();
+					break;
 				case 'x':
 					System.exit(0);
 				default:
@@ -178,41 +227,23 @@ public class SudokuPanel extends JPanel
 	
 	private class FieldListener implements MouseListener
 	{
-
-		@Override
+		
 		public void mouseClicked(MouseEvent e)
-		{
-			
+		{	
 			
 		}
 
-		@Override
 		public void mouseEntered(MouseEvent e)
 		{
-			e.getComponent().setBackground(Color.YELLOW);
-			
+			((JComponent) e.getComponent()).setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		}
 
-		@Override
 		public void mouseExited(MouseEvent e)
 		{
-			e.getComponent().setBackground(Color.WHITE);
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e)
-		{
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e)
-		{
-			// TODO Auto-generated method stub
-			
+			((JComponent) e.getComponent()).setBorder(border);	
 		}
 		
+		public void mousePressed(MouseEvent e){}
+		public void mouseReleased(MouseEvent e){}
 	}
 }
