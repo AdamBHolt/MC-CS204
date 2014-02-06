@@ -134,6 +134,8 @@ public class SudokuPanel extends JPanel
 		newGame.setActionCommand("n");
 		exit.setActionCommand("x");
 		
+		possibleValues.setEditable(false);
+		
 		for(int i=0; i<4; i++)
 		{
 			enterControls[i] = new JPanel();
