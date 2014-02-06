@@ -176,20 +176,52 @@ public class SudokuPanel extends JPanel
 		add(bottomPanel);
 	}
 	
+	private void redrawBoard()
+	{
+		for(int i=0; i<9; i++)
+			for(int j=0; j<9; j++)
+				if(manager.getValueAt(i, j)!=0)
+					cells[i][j].setText(String.valueOf(manager.getValueAt(i, j)));
+				else
+					cells[i][j].setText("");
+	}
+	
+	private void clearFields()
+	{
+		enterRow.setText("");
+		enterColumn.setText("");
+		enterValue.setText("");
+		displayRow.setText("");
+		displayColumn.setText("");
+		possibleValues.setText("");
+	}
+	
 	private void enterNumber()
 	{
-		
+		if(!enterRow.getText().equals("") && !enterColumn.getText().equals("") && !enterValue.getText().equals(""))
+			manager.setValueAt(Integer.parseInt(enterRow.getText()), 
+					Integer.parseInt(enterColumn.getText()),
+					Integer.parseInt(enterValue.getText()));
+		redrawBoard();
+		clearFields();
 	}
 	
 	private void displayValues()
 	{
-		
+		manager.displayPossibleValues(Integer.parseInt(enterRow.getText()),
+				Integer.parseInt(enterColumn.getText()));
 	}
 	
 	private void newGame()
 	{
 		manager = new SudokuBoardManager();
-		manager.newGame(getFile());
+		File inFile = null;
+		inFile = getFile();
+		
+		if(inFile!=null)
+			manager.newGame(inFile);
+		redrawBoard();
+		clearFields();
 	}
 	
 	private File getFile()
