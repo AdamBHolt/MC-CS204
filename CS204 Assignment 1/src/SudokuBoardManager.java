@@ -33,7 +33,7 @@ public class SudokuBoardManager implements SudokuBoardManagerInterface
 				
 		catch (InputOutOfRangeException exception)
 		{
-			JOptionPane.showMessageDialog(new JPanel(), "Please enter a number 1 - 9", "Error", JOptionPane.ERROR_MESSAGE);
+			//JOptionPane.showMessageDialog(new JPanel(), "Please enter a number 1 - 9", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (ValueNotValidException exception)
 		{
@@ -116,16 +116,10 @@ public class SudokuBoardManager implements SudokuBoardManagerInterface
 			}
 		
 			for(int i=rMin; i<=rMax; i++)
-			{
 				for(int k=cMin; k<=cMax; k++)
-				{
 					for(int l=1; l<=9; l++)
-					{
 						if(gameData[i][k]==l)
 							invalidValues[j++] = gameData[i][k];
-					}
-				}
-			}
 		
 			for(int i=1, k=0; i<=9; i++)
 			{
