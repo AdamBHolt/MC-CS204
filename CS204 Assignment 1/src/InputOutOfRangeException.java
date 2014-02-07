@@ -1,6 +1,9 @@
 public class InputOutOfRangeException extends RuntimeException
 {
-	public InputOutOfRangeException() {}
+	private static final long serialVersionUID = 1L;
+
+	public InputOutOfRangeException()
+	{}
 	
 	public InputOutOfRangeException(String message)
 	{

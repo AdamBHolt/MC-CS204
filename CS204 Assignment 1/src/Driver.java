@@ -2,17 +2,20 @@ import javax.swing.*;
 
 public class Driver extends JFrame
 {
-    public static void main(String[] args)
+	private static final long serialVersionUID = 1L;
+
+	public static void main(String[] args)
     {
     	new Driver();
     }
     
     public Driver()
     {
-    	add(new SudokuPanel());
+    	add(new SudokuPanel(getRootPane()));
     	setSize(500, 470);
+    	setResizable(false);
     	setTitle("Sudoku");
-    	setDefaultCloseOperation(EXIT_ON_CLOSE);
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	setVisible(true);
     }
 }

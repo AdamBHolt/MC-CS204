@@ -1,6 +1,9 @@
 public class ValueNotValidException extends RuntimeException
 {
-	public ValueNotValidException() {}
+		private static final long serialVersionUID = 1L;
+
+	public ValueNotValidException()
+	{}
 	
 	public ValueNotValidException(String message)
 	{
