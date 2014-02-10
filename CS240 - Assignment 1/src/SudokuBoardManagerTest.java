@@ -18,12 +18,16 @@ import org.junit.Test;
 public class SudokuBoardManagerTest {
 
 	private SudokuBoardManagerInterface myBoard;
+	private SudokuBoardManagerInterface studentBoard;
 	private File newFile;
+	private File studentFile;
 	private PrintWriter output;
 	
 	@Before
 	public void setUp() {
 		newFile = new File("sudokuTest");
+		studentFile = new File("studentTest");
+		
 		try {
 			output = new PrintWriter(newFile);
 			output.println("8,0,0,3,0,9,0,0,5");
@@ -43,6 +47,25 @@ public class SudokuBoardManagerTest {
 		
 		myBoard = new SudokuBoardManager();
 		myBoard.newGame(newFile.getAbsoluteFile());
+		
+		try {
+			output = new PrintWriter(studentFile);
+			output.println("0,0,0,6,0,7,0,4,1");
+			output.println("6,0,0,0,0,2,0,0,0");
+			output.println("8,3,7,1,0,0,6,2,9");
+			output.println("0,7,0,4,0,0,0,0,0");
+			output.println("0,8,5,0,3,0,2,1,0");
+			output.println("0,0,0,0,0,6,0,7,0");
+			output.println("2,6,3,0,0,1,7,9,5");
+			output.println("0,0,0,2,0,0,0,0,8");
+			output.println("5,4,0,9,0,3,0,0,0");
+			output.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		studentBoard = new SudokuBoardManager();
+		studentBoard.newGame(studentFile.getAbsoluteFile());	
 	}
 
 
@@ -86,7 +109,32 @@ public class SudokuBoardManagerTest {
 	
 	@Test
 	public void testSetValueAtSTUDENT() {
-		fail("Student test not implemented yet");
+		try {
+			assertEquals(studentBoard.getValueAt(1,1),0);
+			studentBoard.setValueAt(1,1,9);
+			assertEquals(studentBoard.getValueAt(1,1),9);
+			studentBoard.setValueAt(1,1,1);
+			fail("This statement should have thrown a ValueNotValidException");
+		} catch (InputOutOfRangeException e) {
+			e.printStackTrace();
+			fail("This statement should have thrown a ValueNotValidException");
+		} catch (ValueNotValidException e) {
+			System.out.println("This is an invalid value");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("This statement should have thrown a ValueNotValidException");
+		}
+		
+		try {
+			studentBoard.setValueAt(0,0,5);
+			fail("This statement should have thrown a InputOutOfRangeException");
+		} catch (InputOutOfRangeException e) {
+			System.out.println("This is an invalid location");
+		} catch (ValueNotValidException e) {
+			fail("This statement should have thrown a InputOutOfRangeException");
+		} catch (Exception e) {
+			fail("This statement should have thrown a InputOutOfRangeException");
+		}
 	}
 
 	@Test
@@ -143,7 +191,23 @@ public class SudokuBoardManagerTest {
 	
 	@Test
 	public void testDisplayPossibleValuesSTUDENT() {
-		fail("Student test not implemented yet");
+		int[] valid;
+		try {
+			valid = studentBoard.displayPossibleValues(4, 1);
+			assertEquals(valid[0],1);
+			assertEquals(valid[1],3);
+			assertEquals(valid[2],9);
+		} catch (Exception e) {
+			fail("This statement should not have thrown an Exception");
+		}
+		
+		try {
+			valid = studentBoard.displayPossibleValues(9, 9);
+			assertEquals(valid[0],2);
+			assertEquals(valid[1],6);
+		} catch (Exception e) {
+			fail("This statement should not have thrown an Exception");
+		}
 	}
 
 }
