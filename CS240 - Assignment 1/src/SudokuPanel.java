@@ -126,6 +126,7 @@ public class SudokuPanel extends JPanel
 
 				//Add a mouse listener to each cell
 				cells[i][j].addMouseListener(new FieldListener());
+				
 				//Add each cell to the panel
 				cellPanel.add(cells[i][j]);
 			}
@@ -271,7 +272,10 @@ public class SudokuPanel extends JPanel
 			for(int j=1; j<=9; j++)
 			{
 				if(manager.getValueAt(i, j)!=0)
+				{
 					cells[i-1][j-1].setText(String.valueOf(manager.getValueAt(i, j)));
+					//cells[i-1][j-1].setToolTipText(getValues());
+				}
 				else
 					cells[i-1][j-1].setText("");
 			}
@@ -389,6 +393,33 @@ public class SudokuPanel extends JPanel
 		{
 			JOptionPane.showMessageDialog(new JPanel(), "Please enter a number 1 - 9", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	private String getValues()
+	{
+//Index to scan the returned array
+				int i=0;
+				//Array to refer to the passed array
+				int[] valid;
+				//String for the valid numbers
+				String validString = "";
+			if(!displayRow.getText().equals("") && !displayColumn.getText().equals(""))
+			{
+				
+				//Call the displayPossibleValues method of the data manager using the Integer values of the display fields
+				valid = manager.displayPossibleValues(Integer.parseInt(displayRow.getText()),
+							Integer.parseInt(displayColumn.getText()));
+
+				//Scan the array of valid values until a 0 is encountered
+				while(valid[i]!=0)
+					//Add each value in the array to the valid String
+					validString+=valid[i++] + " ";
+				//Set the possible values field to the valid String
+				
+	
+		}
+			return validString;
+		
 	}
 
 	/**
