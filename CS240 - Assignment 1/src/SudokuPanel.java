@@ -272,12 +272,11 @@ public class SudokuPanel extends JPanel
 			for(int j=1; j<=9; j++)
 			{
 				if(manager.getValueAt(i, j)!=0)
-				{
 					cells[i-1][j-1].setText(String.valueOf(manager.getValueAt(i, j)));
-					//cells[i-1][j-1].setToolTipText(getValues());
-				}
 				else
 					cells[i-1][j-1].setText("");
+				if(manager.getWriteStatus(i, j))
+				    cells[i-1][j-1].setToolTipText(getValues(i, j));
 			}
 		}
 	}
@@ -395,31 +394,26 @@ public class SudokuPanel extends JPanel
 		}
 	}
 	
-	private String getValues()
+	private String getValues(int r, int c)
 	{
-//Index to scan the returned array
-				int i=0;
-				//Array to refer to the passed array
-				int[] valid;
-				//String for the valid numbers
-				String validString = "";
-			if(!displayRow.getText().equals("") && !displayColumn.getText().equals(""))
-			{
-				
-				//Call the displayPossibleValues method of the data manager using the Integer values of the display fields
-				valid = manager.displayPossibleValues(Integer.parseInt(displayRow.getText()),
-							Integer.parseInt(displayColumn.getText()));
+	    //Index to scan the returned array
+	    int i=0;
+	    //Array to refer to the passed array
+	    int[] valid=null;
+	    //String for the valid numbers
+	    String validString = "";
+		if(r!=0 || c!=0)
+		{
+			//Call the displayPossibleValues method of the data manager using the Integer values of the display fields
+			valid = manager.displayPossibleValues(r, c);
 
-				//Scan the array of valid values until a 0 is encountered
-				while(valid[i]!=0)
-					//Add each value in the array to the valid String
-					validString+=valid[i++] + " ";
-				//Set the possible values field to the valid String
-				
+			//Scan the array of valid values until a 0 is encountered
+			while(valid[i]!=0)
+				//Add each value in the array to the valid String
+				validString+=valid[i++] + " ";	
 	
 		}
-			return validString;
-		
+		return validString;
 	}
 
 	/**
