@@ -6,9 +6,11 @@ import java.awt.event.*;
 public class CarPanel extends JPanel
 {
 	
-	private JButton start, finish, exit;
-	private JRadioButton owner, order, make;
+	private JRadioButton owner, order, makeModelYear;
 	private JTable table;
+	private JTextArea list;
+	private JTextField orderNumber, ownerName, make, model, year;
+	private JButton start, finish, exit;
 	
 	public CarPanel()
 	{
@@ -27,7 +29,7 @@ public class CarPanel extends JPanel
 		JScrollPane tableScroll = new JScrollPane();
 		owner = new JRadioButton("Owner");
 		order = new JRadioButton("Order #");
-		make = new JRadioButton("Make, Model, Year");
+		makeModelYear = new JRadioButton("Make, Model, Year");
 		table = new JTable(20,3);
 		ButtonGroup group = new ButtonGroup();
 		
@@ -37,21 +39,21 @@ public class CarPanel extends JPanel
 		
 		group.add(owner);
 		group.add(order);
-		group.add(make);
+		group.add(makeModelYear);
 		
 		owner.setActionCommand("o");
 		order.setActionCommand("r");
-		make.setActionCommand("m");
+		makeModelYear.setActionCommand("m");
 		
 		owner.addActionListener(new RadioListener());
 		order.addActionListener(new RadioListener());
-		make.addActionListener(new RadioListener());
+		makeModelYear.addActionListener(new RadioListener());
 		
 		sortPanel.setBorder(BorderFactory.createTitledBorder("Sort By"));
 		sortPanel.setPreferredSize(new Dimension(300,75));
 		sortPanel.add(owner);
 		sortPanel.add(order);
-		sortPanel.add(make);
+		sortPanel.add(makeModelYear);
 		
 		tablePanel.setBorder(BorderFactory.createTitledBorder("Car Table"));
 		tableScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -71,7 +73,28 @@ public class CarPanel extends JPanel
 	private void buildRightPanel()
 	{
 		JPanel rightPanel = new JPanel();
+		JPanel listPanel = new JPanel();
+		JPanel detailPanel = new JPanel();
+		JPanel buttonPanel = new JPanel();
+		orderNumber = new JTextField(15);
+		ownerName = new JTextField(15);
+		make = new JTextField(15);
+		model = new JTextField(15);
+		year = new JTextField(15);
+		start = new JButton("Start an Order");
+		finish = new JButton("Finish an Order");
+		exit = new JButton("Exit");
+		list = new JTextArea(10,15);
 		
+		detailPanel.
+		
+		
+		buttonPanel.add(start);
+		buttonPanel.add(finish);
+		buttonPanel.add(exit);
+		rightPanel.add(listPanel);
+		rightPanel.add(detailPanel);
+		rightPanel.add(buttonPanel);
 		add(rightPanel, BorderLayout.EAST);
 	}
 	
