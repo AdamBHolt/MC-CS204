@@ -275,8 +275,8 @@ public class SudokuPanel extends JPanel
 					cells[i-1][j-1].setText(String.valueOf(manager.getValueAt(i, j)));
 				else
 					cells[i-1][j-1].setText("");
-				if(manager.getWriteStatus(i, j))
-				    cells[i-1][j-1].setToolTipText(getValues(i, j));
+				//if(manager.getWriteStatus(i, j))
+				  //cells[i-1][j-1].setToolTipText(getValues(i, j));
 			}
 		}
 	}
@@ -394,6 +394,7 @@ public class SudokuPanel extends JPanel
 		}
 	}
 	
+	/*
 	private String getValues(int r, int c)
 	{
 	    //Index to scan the returned array
@@ -415,6 +416,7 @@ public class SudokuPanel extends JPanel
 		}
 		return validString;
 	}
+	*/
 
 	/**
 	 * Start a new game of sudoku
