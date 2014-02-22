@@ -17,12 +17,13 @@ public class ServiceOrderManager implements ServiceOrderManagerInterface
 	public boolean startService(int orderNum, String owner, String make,
 			String model, int year) throws ServiceOrderInUseException
 	{
+		ServiceOrder order = new ServiceOrder(orderNum, owner, make, model, year);
 		
 		for(ServiceOrderInterface o : orderList)
-			if(o.equals(new ServiceOrder(orderNum, owner, make, model, year)))
+			if(o.equals(order))
 				throw new ServiceOrderInUseException();
 		
-		ServiceOrder order = new ServiceOrder(orderNum, owner, make, model, year);
+		
 		orderList.add(order);
 		ownerList.add(order);
 		makeList.add(order);
@@ -47,8 +48,10 @@ public class ServiceOrderManager implements ServiceOrderManagerInterface
 	public boolean finishService(int orderNum)
 			throws ServiceOrderNotFoundException
 	{
+		ServiceOrder order = new ServiceOrder();
+		order.setOrderNum(orderNum);
 		for(ServiceOrderInterface o : orderList)
-			if(o.equals(orderNum))
+			if(o.equals(order))
 			{
 				orderList.remove(o);
 				ownerList.remove(o);

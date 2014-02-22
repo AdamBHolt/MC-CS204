@@ -1,5 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.*;
+
 import java .util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -65,6 +67,7 @@ public class CarPanel extends JPanel
 		sortPanel.add(makeModelYear);
 		
 		table.setTableHeader(null);
+		table.getSelectionModel().addListSelectionListener(new TableListener());
 		
 		tablePanel.setBorder(BorderFactory.createTitledBorder("Car Table"));
 		tableScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -196,17 +199,32 @@ public class CarPanel extends JPanel
 	
 	public void startOrder()
 	{
-		try
+		if(!orderNumber.getText().equals("") &&
+				!ownerName.getText().equals("") &&
+				!make.getText().equals("") &&
+				!model.getText().equals("") &&
+				!year.getText().equals(""))
 		{
+			try
+			{
 			manager.startService(Integer.parseInt(orderNumber.getText()), ownerName.getText(), make.getText(), model.getText(), Integer.parseInt(year.getText()));
+			}
+			catch(ServiceOrderInUseException ex){};
+			redraw();
 		}
-		catch(ServiceOrderInUseException ex){};
-		redraw();
 	}
 	
 	private void finishOrder()
 	{
-		
+		if(!orderNumber.getText().equals(""))
+		{
+			try
+			{
+				manager.finishService(Integer.parseInt(orderNumber.getText()));
+			}
+			catch (ServiceOrderNotFoundException ex){};
+		}
+		redraw();
 	}
 	
 	
@@ -240,4 +258,12 @@ public class CarPanel extends JPanel
 		}
 	}
 	
+	private class TableListener implements ListSelectionListener
+	{
+		public void valueChanged(ListSelectionEvent e)
+		{
+		orderNumber.setText(String.valueOf(table.getValueAt(e.getFirstIndex(), 1)));
+			
+		}
+	}
 }
