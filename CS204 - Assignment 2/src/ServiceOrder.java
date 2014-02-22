@@ -1,96 +1,111 @@
 
 public class ServiceOrder implements ServiceOrderInterface
 {
-
-	@Override
-	public void setOrderNum(int orderNumber)
+	
+	private int order, year;
+	private String owner, make, model;
+	
+	public ServiceOrder()
 	{
-		// TODO Auto-generated method stub
-		
+		setOrderNum(0);
+		setOwner("");
+		setMake("");
+		setModel("");
+		setYear(0);
+	}
+	
+	public ServiceOrder(int or, String ow, String ma, String mo, int ye)
+	{
+		setOrderNum(or);
+		setOwner(ow);
+		setMake(ma);
+		setModel(mo);
+		setYear(ye);
+	}
+	
+	public void setOrderNum(int o)
+	{
+		order = o;
 	}
 
-	@Override
-	public void setYear(int year)
+	public void setYear(int y)
 	{
-		// TODO Auto-generated method stub
-		
+		year = y;
 	}
 
-	@Override
-	public void setOwner(String ownerName)
+	public void setOwner(String o)
 	{
-		// TODO Auto-generated method stub
-		
+		owner = o;
 	}
 
-	@Override
-	public void setMake(String make)
+	public void setMake(String m)
 	{
-		// TODO Auto-generated method stub
-		
+		make = m;
 	}
 
-	@Override
-	public void setModel(String model)
+	public void setModel(String m)
 	{
-		// TODO Auto-generated method stub
-		
+		model = m;
 	}
 
-	@Override
 	public String getOwner()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return owner;
 	}
 
-	@Override
 	public String getMake()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return make;
 	}
 
-	@Override
 	public String getModel()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return model;
 	}
 
-	@Override
 	public int getOrderNum()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return order;
 	}
 
-	@Override
 	public int getYear()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return year;
 	}
 
-	@Override
 	public String getMakeModelYear()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return make + " " + model + " " + year;
 	}
 
-	@Override
-	public boolean equals(ServiceOrderInterface otherServiceOrder)
+	public boolean equals(ServiceOrderInterface other)
 	{
-		// TODO Auto-generated method stub
+		if(getOrderNum() == other.getOrderNum())
+			return true;
 		return false;
 	}
 
-	@Override
-	public int compareTo(ServiceOrderInterface otherServiceOrder, int key)
+	public int compareTo(ServiceOrderInterface other, int key)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		switch(key)
+		{
+			case 1:
+				if(getOrderNum() < other.getOrderNum())
+					return -1;
+				else if(getOrderNum() > other.getOrderNum())
+					return 1;
+				else return 0;
+			case 2:
+				return getOwner().compareTo(other.getOwner());
+			case 3:
+				return getMakeModelYear().compareTo(other.getMakeModelYear());
+			default:
+				return 0;
+		}
 	}
-
+	
+	public String toString()
+	{
+		return "" + getOrderNum() + " " + getOwner() + " " + getMakeModelYear();
+	}
 }

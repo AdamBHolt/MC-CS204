@@ -1,23 +1,32 @@
 import javax.swing.*;
 import javax.swing.border.*;
+import java .util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+
 
 public class CarPanel extends JPanel
 {
 	
+	private ServiceOrderManager manager;
 	private JRadioButton owner, order, makeModelYear;
 	private JTable table;
 	private JTextArea list;
 	private JTextField orderNumber, ownerName, make, model, year;
 	private JButton start, finish, exit;
+	private int key;
 	
 	public CarPanel()
 	{
+		manager = new ServiceOrderManager();
 		setLayout(new BorderLayout());
 		setBorder(new EmptyBorder(50, 50, 50, 50) );
 		buildLeftPanel();
 		buildRightPanel();
+		try{getOrders();}
+		catch(IOException ex){};
+		owner.doClick();
 	}
 	
 	private void buildLeftPanel()
@@ -41,9 +50,9 @@ public class CarPanel extends JPanel
 		group.add(order);
 		group.add(makeModelYear);
 		
-		owner.setActionCommand("o");
-		order.setActionCommand("r");
-		makeModelYear.setActionCommand("m");
+		owner.setActionCommand("2");
+		order.setActionCommand("1");
+		makeModelYear.setActionCommand("3");
 		
 		owner.addActionListener(new RadioListener());
 		order.addActionListener(new RadioListener());
@@ -123,24 +132,76 @@ public class CarPanel extends JPanel
 		add(rightPanel, BorderLayout.EAST);
 	}
 	
-	private void sortOwner()
+	private void redraw()
 	{
-		
+		reset();
+		sort();
 	}
 	
-	private void sortOrder()
+	private void sort()
 	{
+		String[][] aValues = manager.listByKeyTable(key);
+		Vector<String> vValues = manager.listByKeyVector(key);
+		int r = 0;
 		
+		reset();
+		
+		for(String[] row : aValues)
+		{
+			for(int c=0; c<3; c++)
+				table.setValueAt(row[c], r, c);
+			r++;
+		}
+		
+		int i=1;
+		
+		for(String value : vValues)
+		{
+			list.append(value + " ");
+			if(i++ % 3 == 0)
+				list.append("\n");
+		}
 	}
 	
-	private void sortMMY()
+	private void reset()
 	{
-		
+		for(int i=0; i<20; i++)
+			for(int j=0; j<3; j++)
+				table.setValueAt("", i, j);
+		list.setText("");
 	}
 	
-	private void startOrder()
+	private void getOrders() throws IOException
 	{
-		
+		//File chooser to select the file
+		JFileChooser chooser = new JFileChooser();
+
+		//If the "open" option is chosen in the FileChooser
+		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+		{
+			//File object with the selected file
+			File selectedFile = chooser.getSelectedFile();
+
+			//Scanner to read from the selected file
+			Scanner inputFile = new Scanner(selectedFile);
+
+			//Read each line in the text file
+			while(inputFile.hasNext())
+					manager.startService(Integer.parseInt(inputFile.nextLine()), inputFile.nextLine(), inputFile.nextLine(), inputFile.nextLine(), Integer.parseInt(inputFile.nextLine()));
+
+			//Close the file
+			inputFile.close();
+		}
+	}
+	
+	public void startOrder()
+	{
+		try
+		{
+			manager.startService(Integer.parseInt(orderNumber.getText()), ownerName.getText(), make.getText(), model.getText(), Integer.parseInt(year.getText()));
+		}
+		catch(ServiceOrderInUseException ex){};
+		redraw();
 	}
 	
 	private void finishOrder()
@@ -154,19 +215,9 @@ public class CarPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			switch(e.getActionCommand().charAt(0))
-			{
-				case 'o':
-					sortOwner();
-					break;
-				case 'r':
-					sortOrder();
-					break;
-				case 'm':
-					sortMMY();
-					break;
-				default:
-			}
+			key = Integer.parseInt(e.getActionCommand());
+			redraw();
+
 		}
 	}
 	
