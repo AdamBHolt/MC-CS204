@@ -23,6 +23,7 @@ import org.junit.Test;
 public class ServiceOrderManagerTest {
 
 	public static ServiceOrderManagerInterface serviceOrderManager;
+	public static ServiceOrderManagerInterface studentManager;
 	
 	@Before
 	public void setUp() {
@@ -39,6 +40,20 @@ public class ServiceOrderManagerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		try {
+			studentManager = new ServiceOrderManager();
+			studentManager.startService(1001, "Prefect, Ford", "Ford", "Prefect", 1942);
+			studentManager.startService(1002, "Dent, Arthur", "Toyota", "Camry", 1990);
+			studentManager.startService(1003, "Beeblebrox, Zaphod", "Lexus", "Heart of Gold", 2014);
+			studentManager.startService(1006, "McMillian, Trisha", "Honda", "Civic", 2006);
+			studentManager.startService(1007, "Android, Marvin", "Dodge", "Dart", 1975);
+			
+		} catch (ServiceOrderInUseException ex)
+		{
+			ex.printStackTrace();
+		}
+		
 		
 	}
 		
@@ -87,7 +102,52 @@ public class ServiceOrderManagerTest {
 	@Test
 	//Test the startService(int orderNum, String owner, String make, String model, int year) method
 	public void testStartServiceSTUDENT() {
-		fail("STUDENT test not implemented yet");
+		Vector<String> result = null;
+		result = studentManager.listByKeyVector(1);
+		assertEquals(result.elementAt(1),"1002 Dent, Arthur Toyota Camry 1990");
+		assertEquals(result.elementAt(3),"1006 McMillian, Trisha Honda Civic 2006");
+		
+		//Try to start new orders
+		try {
+			studentManager.startService(1005, "Though, Deep", "Magrathean", "Planet", 1900);
+			result = studentManager.listByKeyVector(1);
+			assertEquals(result.elementAt(1),"1002 Dent, Arthur Toyota Camry 1990");
+			assertEquals(result.elementAt(3),"1005 Though, Deep Magrathean Planet 1900");
+		} catch (ServiceOrderInUseException ex) {
+			fail("This statement should not have thrown a ServiceOrderInUseException");
+		} catch (Exception ex) {
+			fail("This statement should have thrown an Exception");
+		}
+		
+		try {
+			studentManager.startService(1004, "Way, Mille", "Doomed", "Restaurant", 3000);
+			result = studentManager.listByKeyVector(1);
+			assertEquals(result.elementAt(1),"1002 Dent, Arthur Toyota Camry 1990");
+			assertEquals(result.elementAt(3),"1004 Way, Mille Doomed Restaurant 3000");
+		} catch (ServiceOrderInUseException ex) {
+			fail("This statement should not have thrown a ServiceOrderInUseException");
+		} catch (Exception ex) {
+			fail("This statement should have thrown an Exception");
+		}
+		
+		//Try to start new orders with previously used order numbers
+		try {
+			studentManager.startService(1005, "Though, Deep", "Magrathean", "Planet", 1900);
+			fail("This statement should have thrown a ServiceOrderInUseException");
+		} catch (ServiceOrderInUseException ex) {
+			System.out.println("Service Order In Use Exeception");
+		} catch (Exception e) {
+			fail("This statement should have thrown an Exception");
+		}
+		
+		try {
+			studentManager.startService(1004, "Way, Mille", "Doomed", "Restaurant", 3000);
+			fail("This statement should have thrown a ServiceOrderInUseException");
+		} catch (ServiceOrderInUseException ex) {
+			System.out.println("Service Order In Use Exeception");
+		} catch (Exception e) {
+			fail("This statement should have thrown an Exception");
+		}
 	}
 	
 	@Test
@@ -157,7 +217,53 @@ public class ServiceOrderManagerTest {
 	
 	@Test
 	public void testFinishServiceSTUDENT() {
-		fail("STUDENT test not implemented yet");
+		Vector<String> result = null;
+		result = studentManager.listByKeyVector(1);
+		assertEquals(result.elementAt(1),"1002 Dent, Arthur Toyota Camry 1990");
+		assertEquals(result.elementAt(2),"1003 Beeblebrox, Zaphod Lexus Heart of Gold 2014");
+		
+		//Try to finish existing orders
+		try {
+			studentManager.finishService(1003);
+			result = studentManager.listByKeyVector(1);
+			assertEquals(result.elementAt(1),"1002 Dent, Arthur Toyota Camry 1990");
+			assertEquals(result.elementAt(2),"1006 McMillian, Trisha Honda Civic 2006");
+		} catch(ServiceOrderNotFoundException ex) {
+			fail("This statement should not have thrown a ServiceOrderNotFoundException");
+		} catch (Exception e) {
+			fail("This statement should have thrown an Exception");
+		}
+		
+		try {
+			studentManager.finishService(1002);
+			result = studentManager.listByKeyVector(1);
+			assertEquals(result.elementAt(1),"1006 McMillian, Trisha Honda Civic 2006");
+			assertEquals(result.elementAt(2),"1007 Android, Marvin Dodge Dart 1975");
+		} catch(ServiceOrderNotFoundException ex) {
+			fail("This statement should not have thrown a ServiceOrderNotFoundException");
+		} catch (Exception e) {
+			fail("This statement should have thrown an Exception");
+		}
+		
+		//Try to finish previously finished orders
+		try {
+			studentManager.finishService(1003);
+			fail("This statement should have thrown a ServiceOrderNotFoundException");
+		} catch(ServiceOrderNotFoundException ex) {
+			System.out.println("Service Order Not Found Exception");
+		} catch (Exception e) {
+			fail("This statement should have thrown an Exception");
+		}
+		
+		try {
+			studentManager.finishService(1002);
+			fail("This statement should have thrown a ServiceOrderNotFoundException");
+		} catch(ServiceOrderNotFoundException ex) {
+			System.out.println("Service Order Not Found Exception");
+		} catch (Exception e) {
+			fail("This statement should have thrown an Exception");
+		}
+		
 	}
 
 	@Test
@@ -175,8 +281,20 @@ public class ServiceOrderManagerTest {
 	}
 	
 	@Test
-	public void testListByKeyTableSTUDENT() {
-		fail("STUDENT test not implemented yet");
+	public void testListByKeyTableSTUDENT(){
+		String[][] result = null;
+		//sorted by order
+		result = studentManager.listByKeyTable(1); 
+		assertEquals(result[2][0],"1003");
+		assertEquals(result[4][0],"1007");
+		//sorted by owner
+		result = studentManager.listByKeyTable(2); 
+		assertEquals(result[2][0],"Dent, Arthur");
+		assertEquals(result[4][0],"Prefect, Ford");
+		//sorted by make, model, year
+		result = studentManager.listByKeyTable(3); 
+		assertEquals(result[2][0],"Honda Civic 2006");
+		assertEquals(result[4][0],"Toyota Camry 1990");
 	}
 
 	@Test
