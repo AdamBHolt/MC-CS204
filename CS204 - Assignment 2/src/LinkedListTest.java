@@ -17,7 +17,7 @@ public class LinkedListTest
 	private OrderList orderList;
 	private OwnerList ownerList;
 	private MakeList makeList;
-	ServiceOrder order1, order2, order3;
+	private ServiceOrder order1, order2, order3;
 	
 	@Before
 	public void setUp()

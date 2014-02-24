@@ -358,7 +358,9 @@ public class CarPanel extends JPanel
 		}
 	}
 	
-	//Delete an existing service order from the manager
+	/**
+	 * Delete an existing service order from the manager
+	 */
 	private void finishOrder()
 	{
 		//Only perform the action if the order number field is not blank
@@ -385,6 +387,32 @@ public class CarPanel extends JPanel
 		}
 		//Resort the current list
 		sort();
+	}
+	
+	/**
+	 * Save the current orders in a text file
+	 * @throws IOException
+	 */
+	private void writeOrders() throws IOException
+	{
+		//PrintWriter to write to file
+		PrintWriter writer = null;
+	
+		//File chooser to select the file
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogTitle("Save Current Orders");
+		
+		
+		//If the "save" option is chosen in the FileChooser
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+		{
+			//File object with the selected file
+			writer = new PrintWriter(new File(chooser.getSelectedFile().toString()));
+			//Write the current orders to the file
+			writer.println(manager.outputFileFormat());
+			//Close the print writer
+			writer.close();
+		}
 	}
 	
 	/**
@@ -420,6 +448,9 @@ public class CarPanel extends JPanel
 					finishOrder();
 					break;
 				case 'e':
+					//Write to a file
+					try{writeOrders();}
+					catch(IOException ex){ex.printStackTrace();};
 					//Exit the program
 					System.exit(0);
 				default:
