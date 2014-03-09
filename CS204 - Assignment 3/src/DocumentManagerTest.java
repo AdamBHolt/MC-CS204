@@ -81,7 +81,18 @@ public class DocumentManagerTest {
 	
 	@Test
 	public void testSortInBoxSTUDENT() {
-		fail("Test not yet implemented");
+		studentManager.sortInbox();
+		Vector<String> inbox = studentManager.currentInBoxStatus();
+		assertEquals(inbox.elementAt(0),"Inbox is empty");
+		Vector<String> urgentQueue = studentManager.currentUrgentQueueStatus();
+		assertEquals(urgentQueue.elementAt(0), "1. RE: Why is the Printer Covered in Blood?");
+		assertEquals(urgentQueue.elementAt(1), "2. Something is on Fire");
+		Vector<String> normalQueue = studentManager.currentNormalQueueStatus();
+		assertEquals(normalQueue.elementAt(0), "1. Annual Calendar of Events");
+		assertEquals(normalQueue.elementAt(1), "2. Current Sales");
+		Vector<String> lowQueue = studentManager.currentLowQueueStatus();
+		assertEquals(lowQueue.elementAt(0), "1. Quarterly Fridge Cleaning Log");
+		assertEquals(lowQueue.elementAt(1), "2. FW: This is Hilarious");
 	}
 	
 	@Test
@@ -104,7 +115,20 @@ public class DocumentManagerTest {
 	
 	@Test
 	public void testReadDocumentSTUDENT() {
-		fail("Test not yet implemented");
+		studentManager.sortInbox();
+		assertEquals("RE: Why is the Printer Covered in Blood?",studentManager.readDocument());
+		assertEquals(ReaderActivityStatus.Reading, studentManager.currentReaderActivityStatus());
+		studentManager.finishReadingDocument();
+		assertEquals(ReaderActivityStatus.Idle, studentManager.currentReaderActivityStatus());
+		assertEquals("Something is on Fire",studentManager.readDocument());
+		studentManager.finishReadingDocument();
+		assertEquals("Annual Calendar of Events",studentManager.readDocument());
+		studentManager.finishReadingDocument();
+		assertEquals("Current Sales",studentManager.readDocument());
+		studentManager.finishReadingDocument();
+		assertEquals("Quarterly Fridge Cleaning Log",studentManager.readDocument());
+		studentManager.finishReadingDocument();
+		assertEquals("FW: This is Hilarious",studentManager.readDocument());
 	}
 	
 	@Test
@@ -129,7 +153,22 @@ public class DocumentManagerTest {
 	
 	@Test
 	public void testAddDocumentSTUDENT() {
-		fail("Test not yet implemented");
+		studentManager.addDocument("Please Stop Eating My Lunch From the Fridge", "urgent");
+		studentManager.addDocument("Has Anyone Seen My Stapler?", "low");
+		Vector<String> inbox = studentManager.currentInBoxStatus();
+		System.out.println(inbox);
+		assertEquals(inbox.elementAt(0),"1. Has Anyone Seen My Stapler? - Low");
+		assertEquals(inbox.elementAt(1),"2. Please Stop Eating My Lunch From the Fridge - Urgent");
+		studentManager.sortInbox();
+		assertEquals("Please Stop Eating My Lunch From the Fridge",studentManager.readDocument());
+		assertEquals(ReaderActivityStatus.Reading, studentManager.currentReaderActivityStatus());
+		studentManager.finishReadingDocument();
+		assertEquals(ReaderActivityStatus.Idle, studentManager.currentReaderActivityStatus());
+		assertEquals("RE: Why is the Printer Covered in Blood?",studentManager.readDocument());
+		studentManager.finishReadingDocument();
+		assertEquals("Something is on Fire",studentManager.readDocument());
+		studentManager.finishReadingDocument();
+		assertEquals("Annual Calendar of Events",studentManager.readDocument());
 	}
 
 }

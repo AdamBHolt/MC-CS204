@@ -28,19 +28,16 @@ public class DocumentManager implements DocumentManagerInterface
 	public Vector<String> currentInBoxStatus()
 	{
 		Vector<String> returnVector = new Vector<>();
-		int i = 1;
 		
-		/*
 		Stack<Document> tempStack = new Stack<>();
 		Document doc = null;
-		
+		int i = 1;
 
 		if(inbox.size() == 0)
 		{
 			returnVector.add("Inbox is empty");
 			return returnVector;
 		}
-		
 
 		while(!inbox.isEmpty())
 		{
@@ -51,11 +48,7 @@ public class DocumentManager implements DocumentManagerInterface
 
 		while(!tempStack.isEmpty())
 			inbox.push(tempStack.pop());
-		 */
-		
-		for(Document doc : inbox)
-			returnVector.add("" + i++ + ". " + doc);
-		
+
 		return returnVector;
 	}
 
