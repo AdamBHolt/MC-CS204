@@ -1,15 +1,15 @@
 public class Document
 {
 	private String name;
-	private DocumentPriority priority;
+	private String priority;
 	
 	public Document()
 	{
 		setName("");
-		setPriority(DocumentPriority.Normal);
+		setPriority("normal");
 	}
 	
-	public Document(String n, DocumentPriority p)
+	public Document(String n, String p)
 	{
 		setName(n);
 		setPriority(p);
@@ -20,7 +20,7 @@ public class Document
 		name = n;
 	}
 	
-	public void setPriority(DocumentPriority p)
+	public void setPriority(String p)
 	{
 		priority = p;
 	}
@@ -30,13 +30,13 @@ public class Document
 		return name;
 	}
 	
-	public DocumentPriority getPriority()
+	public String getPriority()
 	{
 		return priority;
 	}
 	
 	public String toString()
 	{
-		return name + " " + priority;
+		return getName() + " - " + getPriority().substring(0, 1).toUpperCase() + getPriority().substring(1);
 	}
 }

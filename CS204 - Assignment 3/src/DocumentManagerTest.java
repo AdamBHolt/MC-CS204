@@ -4,7 +4,7 @@ import org.junit.*;
 
 
 public class DocumentManagerTest {
-	public DocumentManager documentManager;
+	public DocumentManager documentManager, studentManager;
 
 
 	@Before
@@ -21,6 +21,14 @@ public class DocumentManagerTest {
 		// create your own DocumentManager
 		// add documents to your DocumentManager
 		// use this DocumentManager for STUDENT TESTS
+		
+		studentManager = new DocumentManager();
+		studentManager.addDocument("Current Sales", "normal");
+		studentManager.addDocument("FW: This is Hilarious", "low");
+		studentManager.addDocument("Something is on Fire", "urgent");
+		studentManager.addDocument("RE: Why is the Printer Covered in Blood?", "urgent");
+		studentManager.addDocument("Quarterly Fridge Cleaning Log", "low");
+		studentManager.addDocument("Annual Calendar of Events", "normal");
 	}
 	
 	@After
@@ -30,6 +38,7 @@ public class DocumentManagerTest {
 		
 		// STUDENT
 		// set your DocumentManager to null
+		studentManager = null;
 	}
 
 	@Test
@@ -45,7 +54,13 @@ public class DocumentManagerTest {
 	
 	@Test
 	public void testCurrentInBoxStatusSTUDENT() {
-		fail("Test not yet implemented");
+		Vector<String> inbox = studentManager.currentInBoxStatus();
+		assertEquals(inbox.elementAt(0),"1. Annual Calendar of Events - Normal");
+		assertEquals(inbox.elementAt(1),"2. Quarterly Fridge Cleaning Log - Low");
+		assertEquals(inbox.elementAt(2),"3. RE: Why is the Printer Covered in Blood? - Urgent");
+		assertEquals(inbox.elementAt(3),"4. Something is on Fire - Urgent");
+		assertEquals(inbox.elementAt(4),"5. FW: This is Hilarious - Low");
+		assertEquals(inbox.elementAt(5),"6. Current Sales - Normal");
 	}
 	
 	@Test

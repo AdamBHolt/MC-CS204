@@ -1,105 +1,204 @@
-import java.util.Vector;
-
+import java.util.*;
 
 public class DocumentManager implements DocumentManagerInterface
 {
+	private Stack<Document> inbox;
+	private ArrayDeque<Document> urgentQueue, normalQueue, lowQueue;
+	private Reader reader;
 
-	@Override
+	public DocumentManager()
+	{
+		inbox = new Stack<>();
+		urgentQueue = new ArrayDeque<>();
+		normalQueue = new ArrayDeque<>();
+		lowQueue = new ArrayDeque<>();
+		reader = new Reader(ReaderStatus.Present, ReaderActivityStatus.None);
+	}
+
 	public ReaderStatus currentReaderStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return reader.getStatus();
 	}
 
-	@Override
 	public ReaderActivityStatus currentReaderActivityStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return reader.getActivity();
 	}
 
-	@Override
 	public Vector<String> currentInBoxStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Vector<String> returnVector = new Vector<>();
+		int i = 1;
+		
+		/*
+		Stack<Document> tempStack = new Stack<>();
+		Document doc = null;
+		
+
+		if(inbox.size() == 0)
+		{
+			returnVector.add("Inbox is empty");
+			return returnVector;
+		}
+		
+
+		while(!inbox.isEmpty())
+		{
+			doc = inbox.pop();
+			tempStack.push(doc);
+			returnVector.add("" + i++ + ". " + doc);
+		}
+
+		while(!tempStack.isEmpty())
+			inbox.push(tempStack.pop());
+		 */
+		
+		for(Document doc : inbox)
+			returnVector.add("" + i++ + ". " + doc);
+		
+		return returnVector;
 	}
 
-	@Override
 	public Vector<String> currentUrgentQueueStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Vector<String> returnVector = new Vector<>();
+		ArrayDeque<Document> tempQueue = new ArrayDeque<>();
+		Document doc = null;
+		int i = 1;
+
+		if(urgentQueue.size() == 0)
+		{
+			returnVector.add("Urgent Priority Queue is empty");
+			return returnVector;
+		}
+
+		while(!urgentQueue.isEmpty())
+		{
+			doc = urgentQueue.removeLast();
+			tempQueue.addFirst(doc);
+			returnVector.add("" + i++ + ". " + doc.getName());
+		}
+
+		while(!tempQueue.isEmpty())
+			urgentQueue.addFirst(tempQueue.removeLast());
+
+		return returnVector;
 	}
 
-	@Override
 	public Vector<String> currentNormalQueueStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Vector<String> returnVector = new Vector<>();
+		ArrayDeque<Document> tempQueue = new ArrayDeque<>();
+		Document doc = null;
+		int i = 1;
+
+		if(normalQueue.size() == 0)
+		{
+			returnVector.add("Normal Priority Queue is empty");
+			return returnVector;
+		}
+
+		while(!normalQueue.isEmpty())
+		{
+			doc = normalQueue.removeLast();
+			tempQueue.addFirst(doc);
+			returnVector.add("" + i++ + ". " + doc.getName());
+		}
+
+		while(!tempQueue.isEmpty())
+			normalQueue.addFirst(tempQueue.removeLast());
+
+		return returnVector;
 	}
 
-	@Override
 	public Vector<String> currentLowQueueStatus()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Vector<String> returnVector = new Vector<>();
+		ArrayDeque<Document> tempQueue = new ArrayDeque<>();
+		Document doc = null;
+		int i = 1;
+
+		if(lowQueue.size() == 0)
+		{
+			returnVector.add("Low Priority Queue is empty");
+			return returnVector;
+		}
+
+		while(!lowQueue.isEmpty())
+		{
+			doc = lowQueue.removeLast();
+			tempQueue.addFirst(doc);
+			returnVector.add("" + i++ + ". " + doc.getName());
+		}
+
+		while(!tempQueue.isEmpty())
+			lowQueue.addFirst(tempQueue.removeLast());
+
+		return returnVector;
 	}
 
-	@Override
 	public void enterReader()
 	{
-		// TODO Auto-generated method stub
-		
+		reader.setStatus(ReaderStatus.Present);
 	}
 
-	@Override
 	public void exitReader()
 	{
-		// TODO Auto-generated method stub
-		
+		reader.setStatus(ReaderStatus.Absent);
 	}
 
-	@Override
 	public int getNumberDocuments()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return inbox.size() + urgentQueue.size() + normalQueue.size() + lowQueue.size();
 	}
 
-	@Override
 	public void addDocument(String name, String priority)
 	{
-		// TODO Auto-generated method stub
-		
+		inbox.push(new Document(name, priority));
 	}
 
-	@Override
 	public void finishReadingDocument()
 	{
-		// TODO Auto-generated method stub
-		
+		reader.setActivity(ReaderActivityStatus.Idle);
 	}
 
-	@Override
 	public String readDocument()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Document doc = null;
+
+		if(reader.getStatus().equals(ReaderStatus.Absent))
+			return "false";
+		
+		reader.setActivity(ReaderActivityStatus.Reading);
+
+		if(!urgentQueue.isEmpty())
+			doc = urgentQueue.removeLast();
+		else if(!normalQueue.isEmpty())
+			doc = normalQueue.removeLast();
+		else if(!lowQueue.isEmpty())
+			doc = lowQueue.removeLast();
+
+		return doc.getName();
 	}
 
-	@Override
 	public boolean readStatus()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return reader.getActivity().equals(ReaderActivityStatus.Reading);
 	}
 
-	@Override
 	public void sortInbox()
 	{
-		// TODO Auto-generated method stub
-		
-	}
+		Document doc;
+		while(!inbox.isEmpty())
+		{
+			doc = inbox.pop();
 
+			if(doc.getPriority().equals("urgent"))
+				urgentQueue.addFirst(doc);
+			else if(doc.getPriority().equals("normal"))
+				normalQueue.addFirst(doc);
+			else
+				lowQueue.addFirst(doc);
+		}
+	}
 }

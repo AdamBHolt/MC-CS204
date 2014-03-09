@@ -12,7 +12,8 @@ public class Driver extends JFrame
 	
 	public Driver()
 	{
-		setSize(700,700);
+		setSize(800,775);
+		setResizable(false);
 		add(new DocumentPanel());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
