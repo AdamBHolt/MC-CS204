@@ -7,7 +7,6 @@
  */
 public class Document
 {
-    //This is a test for push
 	//Name of the Document
 	private String name;
 	//Priority of the Document
