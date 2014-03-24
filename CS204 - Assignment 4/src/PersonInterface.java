@@ -81,7 +81,6 @@ public interface PersonInterface extends Keyable {
 	/**
 	 * Returns the key for the Person object which is in the form:
 	 *      (XXX)XXX-XXXX
-	 * @param p Person object
 	 * @return the phone number in the form (XXX)XXX-XXXX
 	 */
 	public String getKey();
