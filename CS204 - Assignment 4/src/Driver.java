@@ -12,7 +12,8 @@ public class Driver extends JFrame
     public Driver()
     {
 	add(new AddressBookPanel());
-	setSize(800,800);
+	setSize(800,635);
+	setResizable(false);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setVisible(true);
     }
