@@ -11,6 +11,14 @@ public class Person implements PersonInterface
 	private static final int p2 = 31;
 
 
+	public Person()
+	{
+	    setFname("");
+	    setLname("");
+	    setPhone("");
+	    setAddress("");
+	}
+	
 	public Person(String f, String l, String p, String a)
 	{
 	    setFname(f);
@@ -88,13 +96,7 @@ public class Person implements PersonInterface
 	
 	public int hashCode()
 	{
-	    int areaCode, exchangeCode, extensionCode;
-	    StringTokenizer t = new StringTokenizer(phone, "()-");
-	    areaCode = Integer.parseInt(t.nextToken());
-	    exchangeCode = Integer.parseInt(t.nextToken());
-	    extensionCode = Integer.parseInt(t.nextToken());
-	    
-	    return Math.abs((p1 * (areaCode + p2 * exchangeCode) + extensionCode));
+	    return hashKey(getPhone());
 	}
 	
 	public boolean equals(PersonInterface p) 
@@ -104,5 +106,10 @@ public class Person implements PersonInterface
 
 	public String getKey() {
 		return getPhone();
+	}
+	
+	public String toString()
+	{
+	    return getLname() + ", " + getFname();
 	}
 }
