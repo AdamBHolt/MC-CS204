@@ -10,7 +10,6 @@ public class Person implements PersonInterface
 	private static final int p1 = 23;
 	private static final int p2 = 31;
 
-
 	public Person()
 	{
 	    setFname("");
