@@ -3,23 +3,23 @@ import java.util.*;
 public class HashTable<T extends PersonInterface> implements HashTableInterface<T>
 {
 
-    private LinkedList<Person>[] theArray;
+    private LinkedList<T>[] theArray;
     private int size;
 
     public HashTable(int e)
     {
 	size = fourKPlus3(e/3);
-	theArray = (LinkedList<Person>[]) new LinkedList[size];
+	theArray = (LinkedList<T>[]) new LinkedList[size];
 
 	for(int i=0; i<size; i++)
-	    theArray[i] = new LinkedList<Person>();
+	    theArray[i] = new LinkedList<T>();
     }
 
     public int add(T p)
     {
 	int personCount=0;
 
-	theArray[p.hashCode()%size].add((Person)p);
+	theArray[p.hashCode()%size].add(p);
 	for(int i=0; i<size; i++)
 	    personCount+=theArray[i].size();
 	return personCount;
@@ -27,19 +27,16 @@ public class HashTable<T extends PersonInterface> implements HashTableInterface<
 
     public boolean contains(T p)
     {
-	for(int i=0; i<size; i++)
-	    if(theArray[i].contains(p))
-		return true;
-	return false;
+	return contains(p.getKey());
     }
 
     public T getValue(String key)
     {
 	int list = Person.hashKey(key)%size;
 	
-	for(Person p : theArray[list])
+	for(T p : theArray[list])
 	    if(p.getKey().equals(key))
-		return (T)p;
+		return p;
 	return null;
     }
 
@@ -47,7 +44,7 @@ public class HashTable<T extends PersonInterface> implements HashTableInterface<
     {
 	int list = Person.hashKey(key)%size;
 
-	for(Person p : theArray[list])
+	for(T p : theArray[list])
 	    if(p.getKey().equals(key))
 		return true;
 	return false;
@@ -55,11 +52,11 @@ public class HashTable<T extends PersonInterface> implements HashTableInterface<
 
     public ArrayList<T> sort()
     {
-	ArrayList<Person> theList = new ArrayList<>();
-	PersonComparator compare = new PersonComparator();
+	ArrayList<T> theList = new ArrayList<>();
+	PersonComparator<T> compare = new PersonComparator<>();
 	
-	for(LinkedList<Person> list : theArray)
-	    for(Person p : list)
+	for(LinkedList<T> list : theArray)
+	    for(T p : list)
 		theList.add(p);
 
 	Collections.sort(theList, compare);

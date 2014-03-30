@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.regex.*;
 
 public class Person implements PersonInterface
 {
@@ -79,18 +80,7 @@ public class Person implements PersonInterface
 	
 	public static boolean isValidKey(String s)
 	{
-	    for(int i=0; i<s.length()-1; i++)
-	    {
-		if(i%4==0)
-		{
-		    if(s.charAt(i) != '(' && s.charAt(i) != ')' && s.charAt(i) != '-')
-			return false;
-		}
-		else
-		    if(s.charAt(i)<0 && s.charAt(i)>9)
-			return false;
-	    }
-	    return true;
+	    return(Pattern.compile("\\(\\d{3}\\)\\d{3}-\\d{4}").matcher(s).matches());
 	}
 	
 	public int hashCode()
@@ -111,4 +101,5 @@ public class Person implements PersonInterface
 	{
 	    return getLname() + ", " + getFname();
 	}
+
 }

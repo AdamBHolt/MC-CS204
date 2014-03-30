@@ -1,7 +1,8 @@
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 
 public class AddressBookPanel extends JPanel
 {
@@ -31,7 +32,6 @@ public class AddressBookPanel extends JPanel
 	address = new JTextArea();
 	addAddress = new JButton("Add");
 
-
 	addAddress.setActionCommand("a");
 	addAddress.addActionListener(new ButtonListener());
 	addAddress.setMnemonic(KeyEvent.VK_A);
@@ -49,6 +49,10 @@ public class AddressBookPanel extends JPanel
 	addressPanel.setPreferredSize(new Dimension(450,80));
 	addressPanel.add(new JLabel("Address"));
 	addressPanel.add(address);
+
+	pNumber.addFocusListener(new FieldListener());
+	pNumber.setForeground(Color.LIGHT_GRAY);
+	pNumber.setText("(XXX)XXX-XXXX");
 
 	topPanel.add(fNamePanel);
 	topPanel.add(lNamePanel);
@@ -95,6 +99,7 @@ public class AddressBookPanel extends JPanel
 
 	numbers.setBorder(BorderFactory.createTitledBorder("Phone Number(s) (XXX)XXX-XXX"));
 	names.setBorder(BorderFactory.createTitledBorder("Name (Last, First)"));
+	names.setEditable(false);
 
 	textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	textPanel.add(numbers);
@@ -115,31 +120,92 @@ public class AddressBookPanel extends JPanel
 
     private void addAddress()
     {
-
+	if(!fName.getText().equals("") && !lName.getText().equals("") && !pNumber.getText().equals("") && !address.getText().equals(""))
+	{
+	    try
+	    {
+		addressBook.add(fName.getText(), lName.getText(), pNumber.getText(), address.getText());
+		refresh();
+	    }
+	    catch(InvalidKeyException ex)
+	    {
+		pNumber.requestFocus();
+		pNumber.selectAll();
+		JOptionPane.showMessageDialog(null, ex.getMessage());
+	    }
+	    catch(KeyInUseException ex)
+	    {
+		pNumber.requestFocus();
+		pNumber.selectAll();
+		JOptionPane.showMessageDialog(null, ex.getMessage());
+	    }
+	}
     }
-
+    
     private void reverseLookup()
     {
-	try{addressBook.reverseLookup("(310)422-9648");}
-	catch(InvalidKeyException e)
-	{JOptionPane.showMessageDialog(new JPanel(), "This is and invalid phone number." +
-							"\nPhone number must be in the form: (XXX)XXX-XXXX" +
-							"\nwhere X is a digit", "Error", JOptionPane.ERROR_MESSAGE);}
+	if(!numbers.getText().equals(""))
+	{
+	    StringTokenizer tokens = new StringTokenizer(numbers.getText(), "\n");
+	    String output=null;
+	    names.setText("");
+
+	    try
+	    {
+		while(tokens.hasMoreTokens())
+		{
+		    output = addressBook.reverseLookup(tokens.nextToken());
+		    if(output==null)
+			output="Record not located";
+		    names.append(output + "\n");
+		}
+	    }
+	    catch(InvalidKeyException ex)
+	    {
+		JOptionPane.showMessageDialog(null, ex.getMessage());
+	    }
+	}
     }
 
     private void readFile()
     {
+	//File chooser to select the file
+	JFileChooser chooser = new JFileChooser();
+	chooser.setDialogTitle("Select a List of Addresses");
 
+	//If the "open" option is chosen in the FileChooser
+	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+	{
+	    //File object with the selected file
+	    File selectedFile = chooser.getSelectedFile();
+
+	    addressBook.readFile(selectedFile);
+	}
     }
 
     private void writeFile()
     {
+	//File chooser to select the file
+	JFileChooser chooser = new JFileChooser();
+	chooser.setDialogTitle("Save Current Addresses");
 
+	//If the "save" option is chosen in the FileChooser
+	if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+	    addressBook.writeToFile(new File(chooser.getSelectedFile().toString()));
+    }
+
+    private void refresh()
+    {
+	fName.setText("");
+	lName.setText("");
+	pNumber.setForeground(Color.LIGHT_GRAY);
+	pNumber.setText("(XXX)XXX-XXXX");
+	address.setText("");
+	fName.requestFocus();
     }
 
     private class ButtonListener implements ActionListener
     {
-
 	public void actionPerformed(ActionEvent e)
 	{
 	    switch(e.getActionCommand().charAt(0))
@@ -159,8 +225,20 @@ public class AddressBookPanel extends JPanel
 	    case 'e':
 		System.exit(0);
 	    }
-
 	}
     }
 
+    private class FieldListener implements FocusListener
+    {
+	public void focusGained(FocusEvent e)
+	{
+	    if(pNumber.getText().equals("(XXX)XXX-XXXX"))
+	    {
+		pNumber.setForeground(Color.BLACK);
+		pNumber.setText("");
+	    }
+	}
+
+	public void focusLost(FocusEvent arg0){}
+    }
 }
