@@ -22,7 +22,7 @@ public class HashTable<T extends PersonInterface> implements HashTableInterface<
      */
     public HashTable()
     {
-	//Find the next 4k+3 prime greater than 10 and set the size
+	//Set the default size to 23
 	size = 23;
 
 	//Initialize the array based on the size
