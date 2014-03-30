@@ -22,8 +22,8 @@ public class HashTable<T extends PersonInterface> implements HashTableInterface<
      */
     public HashTable()
     {
-	//Set the default size to 23
-	size = 23;
+	//Set the default size
+	size = fourKPlus3(50/3);
 
 	//Initialize the array based on the size
 	theArray = (LinkedList<T>[]) new LinkedList[size];
