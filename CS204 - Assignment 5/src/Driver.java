@@ -11,8 +11,8 @@ public class Driver extends JFrame
     public Driver()
     {
 	setTitle("Spell Checker");
-	setSize(600,500);
-	
+	setSize(600,450);
+	setResizable(false);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	add(new SpellCheckerPanel());
 	setVisible(true);
