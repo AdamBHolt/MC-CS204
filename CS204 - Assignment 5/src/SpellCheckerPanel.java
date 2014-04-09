@@ -22,7 +22,7 @@ public class SpellCheckerPanel extends JPanel
 	buildTopPanel();
 	buildCenterPanel();
 	buildBottomPanel();
-	hideMisspell();
+	//hideMisspell();
     }   
     
     private void buildTopPanel()
@@ -64,6 +64,7 @@ public class SpellCheckerPanel extends JPanel
 	    group[i].add(ignore[i]);
 	    confirm[i] = new JButton("Confirm...");
 	    confirm[i].setActionCommand("c" + i);
+	    System.out.println(confirm[i].getActionCommand());
 	    confirm[i].addActionListener(new ButtonListener());
 	    
 	    misspell[i].add(errors[i]);
@@ -116,6 +117,12 @@ public class SpellCheckerPanel extends JPanel
 	    panel.setVisible(false);
     }
     
+    private void shopwPanel(int index, String label)
+    {
+	errors[index].setText(label);
+	misspell[index].setVisible(true);
+    }
+    
     private void spellCheck()
     {
 	
@@ -132,6 +139,11 @@ public class SpellCheckerPanel extends JPanel
     }
     
     private void writeDictionary()
+    {
+	
+    }
+    
+    private void addWord(String word)
     {
 	
     }
@@ -157,7 +169,11 @@ public class SpellCheckerPanel extends JPanel
 		    writeDictionary();
 		    break;
 		case 'c':
-		    char index = e.getActionCommand().charAt(1);
+		    if(addToDictionary[(int)e.getActionCommand().charAt(1)].isSelected())
+			addWord(errors[(int)e.getActionCommand().charAt(1)].getText());
+		    if(addToDictionary[(int)e.getActionCommand().charAt(1)].isSelected() ||
+			    ignore[(int)e.getActionCommand().charAt(1)].isSelected())
+			misspell[(int)e.getActionCommand().charAt(1)].setVisible(false);
 		    break;
 	    }
 	}
