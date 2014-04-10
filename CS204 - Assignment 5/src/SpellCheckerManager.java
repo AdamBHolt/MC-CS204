@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-
 public class SpellCheckerManager implements SpellCheckerManagerInterface
 {
     private TreeMap<String, String> dictionary;
@@ -11,12 +10,10 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	dictionary = new TreeMap<>();
     }
     
-    @Override
     public boolean checkWord(String wordToCheck)
 	    throws InvalidSpellingException
     {
-	// TODO Auto-generated method stub
-	return false;
+	return dictionary.containsKey(wordToCheck);
     }
 
     @Override
@@ -27,20 +24,43 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	return null;
     }
 
-    @Override
     public void addWord(String wordToAdd) throws DuplicateWordException,
 	    InvalidSpellingException
     {
-	// TODO Auto-generated method stub
-	
+	dictionary.put(wordToAdd, wordToAdd);
     }
 
-    @Override
     public boolean readDictionary(File input) throws DuplicateWordException,
 	    InvalidSpellingException
     {
-	// TODO Auto-generated method stub
-	return false;
+	
+	//Scanner to read from the selected file
+	Scanner inputFile=null;
+	//Temporary String
+	String word = "";
+
+	//Try to create a new Scanner
+	try
+	{
+	    inputFile = new Scanner(input);
+	}
+	catch (FileNotFoundException e)
+	{
+	    //Return false if an exception is thrown
+	    return false;
+	}
+
+	//Read each line in the text file
+	while(inputFile.hasNext())
+	{
+	    word = inputFile.nextLine();
+	    dictionary.put(word, word);
+	}
+
+	//Close the file
+	inputFile.close();
+	//Return true to indicate that the read process was successful
+	return true;
     }
 
     @Override
@@ -50,11 +70,13 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	return false;
     }
 
-    @Override
     public String listDictionary()
     {
-	// TODO Auto-generated method stub
-	return null;
+	String returnString = "";
+	
+	for(Map.Entry<String,String> word : dictionary.entrySet())
+	    returnString += word.getKey() + "\n";
+	return returnString;
     }
 
     @Override
