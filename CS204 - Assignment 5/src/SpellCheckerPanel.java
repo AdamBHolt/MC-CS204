@@ -4,6 +4,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 public class SpellCheckerPanel extends JPanel
 {
@@ -118,6 +119,10 @@ public class SpellCheckerPanel extends JPanel
     {
 	for(JPanel panel : misspell)
 	    panel.setVisible(false);
+	for(JLabel label : errors)
+	    label.setText("");
+	for(ButtonGroup g : group)
+	    g.clearSelection();
     }
     
     private void shopwPanel(int index, String label)
@@ -128,7 +133,25 @@ public class SpellCheckerPanel extends JPanel
     
     private void spellCheck()
     {
-	
+	if(!input.getText().equals(""))
+	{
+	    int i=0;
+	    try
+	    {
+		for(String word : manager.checkWords(input.getText().toLowerCase()))
+		{
+		    errors[i].setText(word);
+		    misspell[i++].setVisible(true);
+		}
+		if(i==0)
+		    JOptionPane.showMessageDialog(null, "Found all words in Dictionary");
+	    }
+	    catch (InvalidSpellingException e)
+	    {
+		JOptionPane.showMessageDialog(null, e.getMessage());
+	    }
+	    input.setText("");
+	}
     }
     
     private void addDictionary()
@@ -149,10 +172,10 @@ public class SpellCheckerPanel extends JPanel
 		manager.readDictionary(selectedFile);
 	    } catch (DuplicateWordException e)
 	    {
-		e.printStackTrace();
+		JOptionPane.showMessageDialog(null, e.getMessage());
 	    } catch (InvalidSpellingException e)
 	    {
-		e.printStackTrace();
+		JOptionPane.showMessageDialog(null, e.getMessage());
 	    }
 	}
     }
@@ -164,7 +187,17 @@ public class SpellCheckerPanel extends JPanel
     
     private void writeDictionary()
     {
-	
+	//File chooser to select the file
+	JFileChooser chooser = new JFileChooser();
+	chooser.setDialogTitle("Save Current Dictionary");
+
+		//If the "save" option is chosen in the FileChooser send the File to the AddressBookUtility
+		if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+		    try
+		    {
+			manager.writeDictionary(new File(chooser.getSelectedFile().toString()));
+		    } catch (IOException e)
+		    {}
     }
     
     private void addWord(String word)
@@ -174,13 +207,17 @@ public class SpellCheckerPanel extends JPanel
 	    manager.addWord(input.getText());
 	} catch (DuplicateWordException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    JOptionPane.showMessageDialog(null, e.getMessage());
 	} catch (InvalidSpellingException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    JOptionPane.showMessageDialog(null, e.getMessage());
 	}
+    }
+    
+    private void clearAll()
+    {
+	hideMisspell();
+	input.setText("");
     }
     
     private class ButtonListener implements ActionListener
@@ -203,12 +240,18 @@ public class SpellCheckerPanel extends JPanel
 		case 'w':
 		    writeDictionary();
 		    break;
+		case 'r':
+		    clearAll();
+		    break;
 		case 'c':
 		    int index = Integer.parseInt(String.valueOf(e.getActionCommand().charAt(1)));
 		    if(addToDictionary[index].isSelected())
 			addWord(errors[index].getText());
 		    if(addToDictionary[index].isSelected() || ignore[index].isSelected())
+		    {
 			misspell[index].setVisible(false);
+			group[index].clearSelection();
+		    }
 		    break;
 	    }
 	}

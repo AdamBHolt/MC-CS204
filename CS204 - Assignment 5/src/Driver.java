@@ -17,5 +17,4 @@ public class Driver extends JFrame
 	add(new SpellCheckerPanel());
 	setVisible(true);
     }
-
 }
