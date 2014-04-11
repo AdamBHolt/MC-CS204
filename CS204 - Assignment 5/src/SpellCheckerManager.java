@@ -1,6 +1,13 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * This class is the data manager for a program that checks the spelling of words against a dictionary of words
+ * @author Adam Holt
+ * @date 4/13/14
+ * @class CS204
+ * @time 12:00 MW
+ */
 public class SpellCheckerManager implements SpellCheckerManagerInterface
 {
     private TreeMap<String, String> dictionary;
@@ -16,15 +23,15 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	if(!isValidWord(wordToCheck))
 	    throw new InvalidSpellingException();
 	//System.out.println(wordToCheck + " : " + dictionary.containsKey(wordToCheck));
-	return dictionary.containsKey(wordToCheck);
+	return dictionary.containsKey(wordToCheck.toLowerCase());
 	    }
 
-    public ArrayList<String> checkWords(String wordsToCheck)
-	    throws InvalidSpellingException
-	    {
+    public ArrayList<String> checkWords(String wordsToCheck) throws InvalidSpellingException
+    {
 	ArrayList<String> returnWords = new ArrayList<>();
 	StringTokenizer words = new StringTokenizer(wordsToCheck);
 	String word = "";
+	int errors = 0;
 
 	while(words.hasMoreTokens())
 	{
@@ -32,11 +39,15 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	    if(!isValidWord(word))
 		throw new InvalidSpellingException();
 	    if(!checkWord(word))
+	    {
 		returnWords.add(word);
-	}
-
-	return returnWords;
+		errors++;
 	    }
+	}
+	if(errors==0)
+	    return null;
+	return returnWords;
+    }
 
     public void addWord(String wordToAdd) throws DuplicateWordException,
     InvalidSpellingException
@@ -45,22 +56,38 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	    throw new InvalidSpellingException();
 	if(checkWord(wordToAdd))
 	    throw new DuplicateWordException();
-	System.out.println("Adding " + wordToAdd);
-	dictionary.put(wordToAdd, wordToAdd);
+	dictionary.put(wordToAdd.toLowerCase(), wordToAdd.toLowerCase());
     }
 
     public boolean readDictionary(File input) throws DuplicateWordException,
     InvalidSpellingException
     {
-	readBinaryFile(input);
-	return true;
-
+	if(input.toString().substring(input.toString().length()-4).equals(".txt"))
+	{
+	    readTextFile(input);
+	    return true;
+	}
+	else if(input.toString().substring(input.toString().length()-4).equals(".bin"))
+	{
+	    readBinaryFile(input);
+	    return true;
+	}
+	else return false;
     }
 
     public boolean writeDictionary(File input) throws IOException
     {
-	writeBinaryFile(input);
-	return true;
+	if(input.toString().substring(input.toString().length()-4).equals(".txt"))
+	{
+	    writeTextFile(input);
+	    return true;
+	}
+	else if(input.toString().substring(input.toString().length()-4).equals(".bin"))
+	{
+	    writeBinaryFile(input);
+	    return true;
+	}
+	else return false;
     }
 
     public String listDictionary()
@@ -74,8 +101,29 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 
     public boolean writeTextFile(File output)
     {
-	// TODO Auto-generated method stub
-	return false;
+	//PrintWriter to write to file
+	PrintWriter writer = null;
+
+	//Try to create a PrintWriter based on the passed File object
+	try
+	{
+	    writer = new PrintWriter(output.toString());
+	} 
+	catch (FileNotFoundException e)
+	{
+	    //If the PrintWriter cannot be created return false
+	    return false;
+	}
+
+	//Write each Person object to the text file
+	for(Map.Entry<String,String> word : dictionary.entrySet())
+	    writer.println(word.getKey());
+
+	//Close the print writer
+	writer.close();
+
+	//Return true to indicate that the write process was successful
+	return true;
     }
 
     public boolean readTextFile(File input) throws DuplicateWordException,
@@ -101,6 +149,17 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	while(inputFile.hasNext())
 	{
 	    word = inputFile.nextLine();
+	    if(!isValidWord(word))
+	    {
+		inputFile.close();
+		throw new InvalidSpellingException();
+	    }
+	    if(checkWord(word))
+	    {
+		inputFile.close();
+		throw new DuplicateWordException();
+	    }
+	    
 	    addWord(word);
 	}
 
@@ -145,7 +204,7 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	{
 	    fileIn = new FileInputStream(input);
 	    objectIn = new ObjectInputStream(fileIn);
-	    
+
 	    try
 	    {
 		dictionary = (TreeMap<String,String>)objectIn.readObject();
@@ -177,5 +236,4 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 		return false;
 	return true;
     }
-
 }

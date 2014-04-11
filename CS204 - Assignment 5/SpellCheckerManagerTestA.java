@@ -17,10 +17,6 @@ public class SpellCheckerManagerTestA {
 	private File testFile;
 	private PrintWriter output;
 	
-	private SpellCheckerManager studentManager;
-	private File studentFile;
-	private PrintWriter studentOutput;
-	
 	@Before
 	public void setUp() throws Exception {
 		testFile = new File("dictionaryTest.txt");
@@ -43,24 +39,6 @@ public class SpellCheckerManagerTestA {
 		// create a new file with different values,
 		// write the file and then call readDictionary with your file
 		// use this instance to test the STUDENT tests below
-		
-		studentFile = new File("studentDictionary.txt");
-		try
-		{
-			studentOutput = new PrintWriter(studentFile);
-			studentOutput.println("ichi");
-			studentOutput.println("ni");
-			studentOutput.println("san");
-			studentOutput.println("shi");
-			studentOutput.println("go");
-			studentOutput.close();
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		studentManager = new SpellCheckerManager();
-		studentManager.readDictionary(new File("studentDictionary.txt"));
 	}
 
 	@After
@@ -70,9 +48,6 @@ public class SpellCheckerManagerTestA {
 		output = null;
 		//STUDENT - tear down your instance of SpellCheckerManager
 		// and File objects
-		studentManager = null;
-		studentOutput = null;
-		studentFile = null;
 	}
 
 	@Test
@@ -91,22 +66,7 @@ public class SpellCheckerManagerTestA {
 	
 	@Test
 	public void testCheckWordSTUDENT() {
-		try
-		{
-		    assertEquals(true, studentManager.checkWord("ichi"));
-		    assertEquals(true, studentManager.checkWord("ni"));
-		    assertEquals(true, studentManager.checkWord("shi"));
-		    assertEquals(true, studentManager.checkWord("go"));
-		    
-		    assertEquals(false, studentManager.checkWord("elephant"));
-		    assertEquals(false, studentManager.checkWord("banana"));
-		    assertEquals(false, studentManager.checkWord("sailboat"));
-		    
-		}
-		catch(InvalidSpellingException e)
-		{
-		    fail("This statement should not have thrown an InvalidSpellingException");
-		}
+		fail("Not yet implemented");
 	}
 	
 	/**
@@ -164,24 +124,7 @@ public class SpellCheckerManagerTestA {
 
 	@Test
 	public void testAddWordSTUDENT() {
-		try
-		{
-		    studentManager.addWord("banana");
-		    studentManager.addWord("elephant");
-		    studentManager.addWord("sailboat");
-		    assertEquals(true, studentManager.checkWord("banana"));
-		    assertEquals(true, studentManager.checkWord("elephant"));
-		    assertEquals(true, studentManager.checkWord("sailboat"));
-		    assertEquals(false, studentManager.checkWord("eagle"));
-		}
-		catch (InvalidSpellingException e)
-		{
-		    fail("This statement should not have thrown an InvalidSpellingException");
-		}
-		catch (DuplicateWordException e)
-		{
-		    fail("This statement should not have thrown a DuplicateWordException");
-		}
+		fail("Not yet implemented");
 	}
 	
 	@Test
@@ -288,23 +231,7 @@ public class SpellCheckerManagerTestA {
 
 	@Test
 	public void testCheckWordsSTUDENT() {
-	    
-	    	ArrayList<String> result;
-	    
-		try
-		{
-		    result = studentManager.checkWords("ichi ni san shi go");
-		    assertEquals(null, result);
-		    
-		    result = studentManager.checkWords("banana elephant sailboat shi go");
-		    assertEquals("banana", result.get(0));
-		    assertEquals("elephant", result.get(1));
-		    assertEquals("sailboat", result.get(2));
-		}
-		catch(InvalidSpellingException e)
-		{
-		    fail("This statement should not have thrown a InvalidSpellingException");
-		}
+		fail("Not yet implemented");
 	}
 	
 	@Test
