@@ -395,7 +395,7 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
      * @param file the name of the file
      * @return the extension of the file
      */
-    public String getExtension(File file) 
+    private String getExtension(File file) 
     {
 	String ext = null;
 	String s = file.getName();
