@@ -104,8 +104,8 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
      */
     public boolean readDictionary(File input) throws DuplicateWordException,InvalidSpellingException
     {
-	//If the extension of the file to be read is .txt call the readTextFile method
-	if(input.toString().substring(input.toString().length()-4).equals(".txt"))
+	//If the extension of the file to be read is txt call the readTextFile method
+	if(getExtension(input).equals("txt"))
 	{
 	    try
 	    {
@@ -121,8 +121,8 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 		throw e;
 	    }
 	}
-	//If the extension of the file to be read is .bin call the readBinaryFile method
-	else if(input.toString().substring(input.toString().length()-4).equals(".bin"))
+	//If the extension of the file to be read is bin call the readBinaryFile method
+	else if(getExtension(input).equals("bin"))
 	{
 	    try
 	    {
@@ -149,12 +149,12 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
      */
     public boolean writeDictionary(File output) throws IOException
     {
-	//If the extension of the file to be written to is .txt call the writeTextFile method
-	if(output.toString().substring(output.toString().length()-4).equals(".txt"))
+	//If the extension of the file to be written to is txt call the writeTextFile method
+	if(getExtension(output).equals("txt"))
 	    return writeTextFile(output);
 
-	//If the extension of the file to be written to is .txt call the writeBinFile method
-	else if(output.toString().substring(output.toString().length()-4).equals(".bin"))
+	//If the extension of the file to be written to is bin call the writeBinFile method
+	else if(getExtension(output).equals("bin"))
 	    return writeBinaryFile(output);
 
 	//Otherwise return false
@@ -327,16 +327,18 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	    {
 		//Set the temporary dictionary to the new tree object
 		tempDict = (TreeMap<String,String>)objectIn.readObject();
-		
+
 		//Check through each word of the temporary dictionary
 		for(Map.Entry<String,String> word : tempDict.entrySet())
 		{
+		    //If the word is not valid close the file and throw and exception
 		    if(!isValidWord(word.getKey()))
 		    {
 			objectIn.close();
 			fileIn.close();
 			throw new InvalidSpellingException();
 		    }
+		    //If the word is already in the dictionary close the file and throw an exception
 		    if(checkWord(word.getKey()))
 		    {
 			objectIn.close();
@@ -344,6 +346,7 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 			throw new DuplicateWordException();
 		    }
 		    else
+			//Add the word to the dictionary
 			addWord(word.getKey());
 		}
 	    }
@@ -354,9 +357,11 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 		fileIn.close();
 		return false;
 	    }
+	    //Close the input streams
 	    objectIn.close();
 	    fileIn.close();
 	}
+	//If an exception is thrown return false
 	catch (FileNotFoundException e)
 	{
 	    return false;
@@ -365,7 +370,7 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 	{
 	    return false;
 	}
-
+	//If the read procedure is successful return true
 	return true;
     }
 
@@ -382,5 +387,23 @@ public class SpellCheckerManager implements SpellCheckerManagerInterface
 		return false;
 	//If no non-letter is found return true
 	return true;
+    }
+
+    /**
+     * Returns the extension of a file in the form FILENAME.xxx
+     * In this case the extension is the xxx
+     * @param file the name of the file
+     * @return the extension of the file
+     */
+    public String getExtension(File file) 
+    {
+	String ext = null;
+	String s = file.getName();
+	int i = s.lastIndexOf('.');
+
+	if (i > 0 &&  i < s.length() - 1) {
+	    ext = s.substring(i+1).toLowerCase();
+	}
+	return ext;
     }
 }

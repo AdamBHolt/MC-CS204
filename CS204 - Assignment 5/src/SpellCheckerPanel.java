@@ -62,7 +62,7 @@ public class SpellCheckerPanel extends JPanel
 	check.addActionListener(new ButtonListener());
 
 	//Set the border and size of the panel
-	topPanel.setBorder(BorderFactory.createTitledBorder("Enter Words to Check"));
+	topPanel.setBorder(BorderFactory.createTitledBorder("Enter Word/Words to Check"));
 	topPanel.setPreferredSize(new Dimension(100,100));
 
 	//Add the field and button
@@ -277,7 +277,9 @@ public class SpellCheckerPanel extends JPanel
 	    //Send the File to the manager
 	    try
 	    {
-		manager.readDictionary(selectedFile);
+		//If the dictionary is not added inform the user
+		if(!manager.readDictionary(selectedFile))
+		    JOptionPane.showMessageDialog(null, "Failed to add the dictionary.");
 	    }
 	    catch (DuplicateWordException e)
 	    {
@@ -316,7 +318,9 @@ public class SpellCheckerPanel extends JPanel
 	    try
 	    {
 		//Send the name of the selected file to the writeDictionary method of the manager
-		manager.writeDictionary(new File(chooser.getSelectedFile().toString()));
+		//If the file is not written inform the user
+		if(!manager.writeDictionary(new File(chooser.getSelectedFile().toString())))
+		    JOptionPane.showMessageDialog(null, "Failed to write the dictionary.");
 	    }
 	    catch (IOException e){}
 	}

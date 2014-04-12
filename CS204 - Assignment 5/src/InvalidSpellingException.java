@@ -1,5 +1,13 @@
 import java.io.IOException;
 
+/**
+ * This class is an exception for a program that checks the spelling of words against a dictionary of words
+ * It indicates that a word contains invalid characters
+ * @author Adam Holt
+ * @date 4/13/14
+ * @class CS204
+ * @time 12:00 MW
+ */
 public class InvalidSpellingException extends IOException
 {
     //Default serial ID
