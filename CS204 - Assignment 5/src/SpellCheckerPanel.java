@@ -106,6 +106,7 @@ public class SpellCheckerPanel extends JPanel
 	    group[i].add(addToDictionary[i]);
 	    group[i].add(ignore[i]);
 	    confirm[i] = new JButton("Confirm...");
+	    //Set the action command to indicate the index of the panel
 	    confirm[i].setActionCommand("c" + i);
 	    confirm[i].addActionListener(new ButtonListener());
 	    misspell[i].add(errors[i]);
@@ -239,26 +240,33 @@ public class SpellCheckerPanel extends JPanel
 			//iterate through each word in the ArrayList until the maximum errors or length of the ArrayList is reached
 			for(int i=0; i<ERRORS && i<words.size(); i++)
 			    showPanel(i, words.get(i));
+			//If there are any words beyond the maximum number of errors add them to a String
 			for(int i=ERRORS; i<words.size(); i++)
 			    additionalErrors += words.get(i) + "\n";
+			//Display the additional misspelled words in a JOptionPane
 			if(!additionalErrors.equals(""))
 			    JOptionPane.showMessageDialog(null, "Additional words not found:\n" + additionalErrors);
 		    }
 		}
 		catch (InvalidSpellingException e)
 		{
+		    //If a word is invalid display a message informing the user
 		    JOptionPane.showMessageDialog(null, e.getMessage());
 		}
+		//Clear the input field
 		input.setText("");
 	    }
 	}
     }
 
+    /**
+     * Allows the user to add words to the dictionary by reading a .txt or .bin file
+     */
     private void addDictionary()
     {
 	//File chooser to select the file
 	JFileChooser chooser = new JFileChooser();
-	chooser.setDialogTitle("Select a Dictionary");
+	chooser.setDialogTitle("Select a Dictionary File");
 
 	//If the "open" option is chosen in the FileChooser
 	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
@@ -266,91 +274,138 @@ public class SpellCheckerPanel extends JPanel
 	    //File object with the selected file
 	    File selectedFile = chooser.getSelectedFile();
 
-	    //Send the File to the AddressBookUtility
+	    //Send the File to the manager
 	    try
 	    {
 		manager.readDictionary(selectedFile);
-	    } catch (DuplicateWordException e)
+	    }
+	    catch (DuplicateWordException e)
 	    {
+		//If a word is already in the dictionary display a message informing the user
 		JOptionPane.showMessageDialog(null, e.getMessage());
-	    } catch (InvalidSpellingException e)
+	    }
+	    catch (InvalidSpellingException e)
 	    {
+		//If a word is invalid display a message informing the user
 		JOptionPane.showMessageDialog(null, e.getMessage());
 	    }
 	}
     }
 
+    /**
+     * Display the contents of the current dictionary in the console
+     */
     private void listDictionary()
     {
+	//Get the contents of the current dictionary and display it in the console
 	System.out.println(manager.listDictionary());
     }
 
+    /**
+     * Write the current dictionary to a .txt or .bin file
+     */
     private void writeDictionary()
     {
 	//File chooser to select the file
 	JFileChooser chooser = new JFileChooser();
 	chooser.setDialogTitle("Save Current Dictionary");
 
-	//If the "save" option is chosen in the FileChooser send the File to the AddressBookUtility
+	//If the "save" option is chosen in the FileChooser send the File to the manager
 	if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-	    try
 	{
+	    try
+	    {
+		//Send the name of the selected file to the writeDictionary method of the manager
 		manager.writeDictionary(new File(chooser.getSelectedFile().toString()));
-	} catch (IOException e)
-	{}
+	    }
+	    catch (IOException e){}
+	}
     }
 
+    /**
+     * Add a misspelled word to the existing dictionary
+     * @param word Word to add to the dictionary
+     */
     private void addWord(String word)
     {
 	try
 	{
+	    //Send the word to be added
 	    manager.addWord(word);
-	} catch (DuplicateWordException e)
+	}
+	catch (DuplicateWordException e)
 	{
-	    JOptionPane.showMessageDialog(null, e.getMessage());
-	} catch (InvalidSpellingException e)
-	{
+	    //If a word is already in the dictionary display a message informing the user
 	    JOptionPane.showMessageDialog(null, e.getMessage());
 	}
+	catch (InvalidSpellingException e)
+	{
+	    //If a word is invalid display a message informing the user
+	    JOptionPane.showMessageDialog(null, e.getMessage());
+	}
+	//Display a message letting the user know that the word was added to the dictionary
 	JOptionPane.showMessageDialog(null, "Added \"" + word + "\" to dictionary.");
     }
 
+    /**
+     * Clear the input field and hide all misspelled words
+     */
     private void clearAll()
     {
+	//Hide all misspelled words
 	hideMisspell();
+	//Set the input field to blank
 	input.setText("");
     }
 
+    /**
+     * ActionListener for the buttons
+     */
     private class ButtonListener implements ActionListener
     {
+	/**
+	 * Action to perform when a button is clicked
+	 */
 	public void actionPerformed(ActionEvent e)
 	{
+	    //Switch based on the first character of the actionCommand of the clicked button
 	    switch(e.getActionCommand().charAt(0))
 	    {
+		//Spell Check button
 		case 's':
 		    spellCheck();
 		    break;
+		    //Exit button
 		case 'e':
 		    System.exit(0);
+		    //Add Dictionary button
 		case 'a':
 		    addDictionary();
 		    break;
+		    //List Dictionary button
 		case 'l':
 		    listDictionary();
 		    break;
+		    //Write Dictionary button
 		case 'w':
 		    writeDictionary();
 		    break;
+		    //Clear All button
 		case 'r':
 		    clearAll();
 		    break;
+		    //Confirm buttons on misspelled words
 		case 'c':
+		    //Get the number that is the second character of the actionCommand - indicates the index of the panel
 		    int index = Integer.parseInt(String.valueOf(e.getActionCommand().charAt(1)));
+		    //If "add to dictionary" is selected add the word to the dictionary
 		    if(addToDictionary[index].isSelected())		 
 			addWord(errors[index].getText());
+		    //If either radio button is selected hide the panel and clear the button group
 		    if(addToDictionary[index].isSelected() || ignore[index].isSelected())
 		    {
 			misspell[index].setVisible(false);
+			errors[index].setText("");
 			group[index].clearSelection();
 		    }
 		    break;
