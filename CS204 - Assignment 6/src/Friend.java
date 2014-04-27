@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * This class represents a Friend in a program that is a social network of Friends
  * The Friend objects act as vertices in a graph of Friend connections
@@ -38,6 +40,31 @@ public class Friend implements Comparable<Friend>
 	setFirstName(f);
 	setLastName(l);
 	setHomeTown(h);
+    }
+    
+    /**
+     * Constructor takes a single String as a parameter
+     * @param n Full name and home town of Friend in the form <first name> <last name> of <home town>
+     */
+    public Friend(String n)
+    {
+	StringTokenizer tokens = new StringTokenizer(n);
+	
+	setFirstName(tokens.nextToken());
+	setLastName(tokens.nextToken());
+	tokens.nextToken();
+	setHomeTown(tokens.nextToken());
+    }
+    
+    /**
+     * Copy constructor
+     * @param f Friend object to be copied
+     */
+    public Friend(Friend f)
+    {
+	setFirstName(f.getFirstName());
+	setLastName(f.getLastName());
+	setHomeTown(f.getHomeTown());
     }
     
     /**
@@ -131,6 +158,6 @@ public class Friend implements Comparable<Friend>
      */
     public String toString()
     {
-	return getFullName() + " " + getHomeTown();
+	return getFullName() + " of " + getHomeTown();
     }
 }

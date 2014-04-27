@@ -5,13 +5,13 @@ import java.util.*;
 public class DataManager implements DataManagerInterface
 {
 
-    private FriendGraph friendList;
-    
+    private FriendGraph friendGraph;
+
     public DataManager()
     {
-	friendList = new FriendGraph();
+	friendGraph = new FriendGraph();
     }
-    
+
     @Override
     public ArrayList<String> friendsOfFriends(String name)
     {
@@ -22,83 +22,87 @@ public class DataManager implements DataManagerInterface
     @Override
     public ArrayList<String> friendsOfFriends(String fname, String lname,
 	    String hometown)
-    {
+	    {
 	// TODO Auto-generated method stub
 	return null;
-    }
+	    }
 
-    @Override
+
     public ArrayList<String> listFriends(String name)
     {
-	// TODO Auto-generated method stub
-	return null;
+	return listFriends(new Friend(name));
     }
 
-    @Override
-    public ArrayList<String> listFriends(String fname, String lname,
-	    String hometown)
+    public ArrayList<String> listFriends(String fname, String lname,String hometown)
     {
-	// TODO Auto-generated method stub
-	return null;
+
+	return listFriends(new Friend(fname, lname, hometown));
     }
 
-    @Override
     public ArrayList<String> listFriends(Friend f)
     {
-	// TODO Auto-generated method stub
-	return null;
+	ArrayList<String> returnList = new ArrayList<>();
+	Set<Edge<Friend, Friend>> friendSet = friendGraph.edgesOf(f);
+
+	for(Edge<Friend, Friend> e : friendSet)
+	{
+	    if(e.getV1().equals(f))
+		returnList.add(e.getV2().toString());
+	    else
+		returnList.add(e.getV1().toString());
+	}
+
+	return returnList;
     }
 
-    @Override
     public ArrayList<String> getProfile(String name)
     {
-	// TODO Auto-generated method stub
-	return null;
+	Friend tempFriend = new Friend(name);
+	ArrayList<String> returnList = new ArrayList<>();
+
+
+
+	return returnList;
     }
 
-    @Override
     public Vector<String> vectorOfParticipants()
     {
-	// TODO Auto-generated method stub
-	return null;
+	Vector<String> returnVector = new Vector<>();
+	Set<Friend> friendSet = friendGraph.vertexSet();
+
+	for(Friend f : friendSet)
+	    returnVector.add(f.toString());
+
+	return returnVector;
     }
 
-    @Override
     public void addParticipant(String fName, String lName, String city)
     {
-	// TODO Auto-generated method stub
-	
+	friendGraph.addVertex(new Friend(fName, lName, city));
     }
 
-    @Override
     public void addFriend(String profile, String newFriend)
     {
-	// TODO Auto-generated method stub
-	
+	friendGraph.addEdge(new Friend(profile),  new Friend(newFriend));
     }
 
-    @Override
     public void addFriend(String profileFname, String profileLname,
 	    String profileHometown, String newFriendFname,
 	    String newFriendLName, String newFriendHometown)
     {
-	// TODO Auto-generated method stub
-	
+	friendGraph.addEdge(new Friend(profileFname, profileLname, profileHometown),  new Friend(newFriendFname, newFriendLName, newFriendHometown));
     }
 
-    @Override
-    public void populateParticipants(File participantsFile)
-	    throws FileNotFoundException
+    public void populateParticipants(File participantsFile)throws FileNotFoundException
     {
 	// TODO Auto-generated method stub
-	
+
     }
 
-    @Override
     public void populateFriends(File friendsFile) throws FileNotFoundException
     {
 	// TODO Auto-generated method stub
-	
+
     }
 
 }

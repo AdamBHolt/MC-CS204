@@ -1,0 +1,26 @@
+Ann:Abbott:San Diego, CA
+Maple:Myers:Cleveland, OH
+Harold:Hanson:Pittsburg, OH
+Bob:Brown:Independance, MI
+Jane:Jones:Boise, ID
+Wanda:Wallace:Billing, MO
+Mark:Miller:Star, WY
+Tom:Tuckett:New York, NY
+Zeb:Zucker:Shreveport, AL
+Catherine:Cob:Bloomington, IN
+Derik:Dunning:New Orleans, LA
+Eric:Epstein:Alexandria, VA
+Fred:Flinstone:Galveston, TX
+Glenda:Goodheart:Orem, UT
+Ida:Ignome:Carson City, NV
+Karen:Kirkland:Honolulu, HI
+Larry:Lobster:Knox, ME
+Nathaniel:Nestle:Hershey, PA
+Olga:Oxford:Dover, DE
+Patricia:Pagan:Fargo, ND
+Quentin:Quimby:Souix Falls, SD
+Rachel:Rigdon:Montpelier, VT
+Samuel:Sisten:Cranston, RI
+Ulysses:Ugg:Eugene, OR
+Velma:Varington:Beaufort, SC
+Yolonda:Yellow:Franklin, TN
