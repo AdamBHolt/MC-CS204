@@ -139,7 +139,7 @@ public class Friend implements Comparable<Friend>
     public int compareTo(Friend otherFriend)
     {
 	//Return the String comparison of the full names of the Friend objects
-	return getFullName().compareTo(otherFriend.getFullName());
+	return getLastName().compareTo(otherFriend.getLastName());
     }
     
     /**

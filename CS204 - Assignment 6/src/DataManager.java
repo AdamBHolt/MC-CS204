@@ -12,20 +12,28 @@ public class DataManager implements DataManagerInterface
 	friendGraph = new FriendGraph();
     }
 
-    @Override
     public ArrayList<String> friendsOfFriends(String name)
     {
-	// TODO Auto-generated method stub
-	return null;
+	ArrayList<String> friends = listFriends(name);
+	ArrayList<String> returnList = new ArrayList<>();
+	Set<String> friendSet = new TreeSet<>();
+
+	for(String currentFriend : friends)
+	    for(String friend : listFriends(currentFriend))
+		if(!friend.toString().equals(name) && !friends.contains(friend))
+		    friendSet.add(friend);
+
+	
+	for(String s : friendSet)
+	    returnList.add(s);
+
+	return returnList;
     }
 
-    @Override
-    public ArrayList<String> friendsOfFriends(String fname, String lname,
-	    String hometown)
-	    {
-	// TODO Auto-generated method stub
-	return null;
-	    }
+    public ArrayList<String> friendsOfFriends(String fname, String lname, String hometown)
+    {
+	return friendsOfFriends(fname + " " + lname + " of " + hometown);
+    }
 
 
     public ArrayList<String> listFriends(String name)
@@ -44,7 +52,7 @@ public class DataManager implements DataManagerInterface
 	ArrayList<String> returnList = new ArrayList<>();
 	Set<Edge<Friend, Friend>> friendSet = friendGraph.edgesOf(f);
 
-	
+
 	for(Edge<Friend, Friend> e : friendSet)
 	{
 	    if(e.getV1().equals(f))
@@ -167,7 +175,7 @@ public class DataManager implements DataManagerInterface
 	    homeTown = friendGraph.getHomeTown(fName, lName);
 	    friends = Integer.parseInt(tokens.nextToken());
 
-	    while(tokens.hasMoreTokens())
+	    for(int i=0; i<friends; i++)
 	    {
 		f = tokens.nextToken();
 		l = tokens.nextToken();

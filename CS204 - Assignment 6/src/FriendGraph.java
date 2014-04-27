@@ -159,7 +159,7 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
     public String getHomeTown(String fName, String lName)
     {
 	for(Friend f : vertexSet())
-	    if(f.equals(fName + " " + lName))
+	    if(f.equals(new Friend(fName, lName, "")))
 		return f.getHomeTown();
 	return null;
     }

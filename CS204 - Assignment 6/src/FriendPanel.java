@@ -99,6 +99,7 @@ public class FriendPanel extends JPanel
 	friendsOfFriends = new JButton("Show Friends of Friends");
 	addFriend = new JButton("Add Friend");
 	fOfFriends = new JTextArea(10,20);
+	JScrollPane scroll = new JScrollPane(fOfFriends);
 	addAFriend = new JComboBox<String>();
 
 	friendsOfFriends.setActionCommand("s");
@@ -106,10 +107,11 @@ public class FriendPanel extends JPanel
 	addFriend.setActionCommand("f");
 	addFriend.addActionListener(new ButtonListener());
 
-	fOfFriends.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
 
 	upperPanel.add(friendsOfFriends);
-	upperPanel.add(fOfFriends);
+	upperPanel.add(scroll);
 
 	bottomPanel.add(addAFriend);
 	bottomPanel.add(addFriend);
@@ -171,7 +173,14 @@ public class FriendPanel extends JPanel
 
     private void showFriendsOfFriends()
     {
+	if(participants.getSelectedItem()!=null)
+	{
+	    ArrayList<String> fOF = manager.friendsOfFriends(participants.getSelectedItem().toString());
+	    fOfFriends.setText("");
 
+	    for(String s : fOF)
+		fOfFriends.append(s + "\n");
+	}
     }
 
     private void addFriend()
@@ -200,19 +209,19 @@ public class FriendPanel extends JPanel
     private void refresh()
     {
 	Vector<String> part = manager.vectorOfParticipants();
-	
+
 	participants.removeAllItems();
-	addAFriend.removeAllItems();
 	for(String s : part)
 	{
 	    participants.addItem(s);
-	    addAFriend.addItem(s);
+	    if(!s.equals(participants.getSelectedItem().toString()))
+		addAFriend.addItem(s);
 	}
 	getProfile();
 	getFriends();
 	addFName.requestFocus();
     }
-    
+
     private void getProfile()
     {
 	if(participants.getSelectedItem()!=null && !participants.getSelectedItem().toString().equals(""))
@@ -223,19 +232,26 @@ public class FriendPanel extends JPanel
 	    showHomeTown.setText(profile.get(2));
 	}
     }
-    
+
     private void getFriends()
     {
 	if(participants.getSelectedItem()!=null && !participants.getSelectedItem().toString().equals(""))
 	{
 	    ArrayList<String> friendList = manager.listFriends(participants.getSelectedItem().toString());
+	    Vector<String> part = manager.vectorOfParticipants();
 	    friends.setText("");
-	    
+	    addAFriend.removeAllItems();
+
 	    for(String s : friendList)
 		friends.append(s + "\n");
+
+	    for(String s : part)
+		if(!s.equals(participants.getSelectedItem().toString()))
+		    addAFriend.addItem(s);
+
 	}
     }
-    
+
     private void readParticipants()
     {
 	//File chooser to select the file
@@ -247,7 +263,7 @@ public class FriendPanel extends JPanel
 	{
 	    //File object with the selected file
 	    File selectedFile = chooser.getSelectedFile();
-	    
+
 	    //Send the File to the AddressBookUtility
 	    try
 	    {
@@ -256,26 +272,26 @@ public class FriendPanel extends JPanel
 	    catch (FileNotFoundException e){}
 	}
     }
-    
+
     private void readFriends()
     {
 	//File chooser to select the file
-		JFileChooser chooser = new JFileChooser();
-		chooser.setDialogTitle("Select a List of Friends");
+	JFileChooser chooser = new JFileChooser();
+	chooser.setDialogTitle("Select a List of Friends");
 
-		//If the "open" option is chosen in the FileChooser
-		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-		{
-		    //File object with the selected file
-		    File selectedFile = chooser.getSelectedFile();
-		    
-		    //Send the File to the AddressBookUtility
-		    try
-		    {
-			manager.populateFriends(selectedFile);
-		    }
-		    catch (FileNotFoundException e){}
-		}
+	//If the "open" option is chosen in the FileChooser
+	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+	{
+	    //File object with the selected file
+	    File selectedFile = chooser.getSelectedFile();
+
+	    //Send the File to the AddressBookUtility
+	    try
+	    {
+		manager.populateFriends(selectedFile);
+	    }
+	    catch (FileNotFoundException e){}
+	}
     }
 
     private class ButtonListener implements ActionListener
@@ -303,8 +319,8 @@ public class FriendPanel extends JPanel
     {
 	public void actionPerformed(ActionEvent e)
 	{
-	   getProfile();
-	   getFriends();
+	    getProfile();
+	    getFriends();
 	}
     }
 }
