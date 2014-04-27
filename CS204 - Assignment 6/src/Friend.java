@@ -48,12 +48,13 @@ public class Friend implements Comparable<Friend>
      */
     public Friend(String n)
     {
-	StringTokenizer tokens = new StringTokenizer(n);
+	Scanner scan = new Scanner(n);
 	
-	setFirstName(tokens.nextToken());
-	setLastName(tokens.nextToken());
-	tokens.nextToken();
-	setHomeTown(tokens.nextToken());
+	setFirstName(scan.next());
+	setLastName(scan.next());
+	scan.next();
+	setHomeTown(scan.nextLine().trim());
+	scan.close();
     }
     
     /**

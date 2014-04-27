@@ -44,10 +44,12 @@ public class DataManager implements DataManagerInterface
 	ArrayList<String> returnList = new ArrayList<>();
 	Set<Edge<Friend, Friend>> friendSet = friendGraph.edgesOf(f);
 
+	
 	for(Edge<Friend, Friend> e : friendSet)
 	{
 	    if(e.getV1().equals(f))
 		returnList.add(e.getV2().toString());
+
 	    else
 		returnList.add(e.getV1().toString());
 	}
@@ -57,10 +59,15 @@ public class DataManager implements DataManagerInterface
 
     public ArrayList<String> getProfile(String name)
     {
-	Friend tempFriend = new Friend(name);
 	ArrayList<String> returnList = new ArrayList<>();
+	Scanner scan = new Scanner(name);
 
+	returnList.add(scan.next());
+	returnList.add(scan.next());
+	scan.next();
+	returnList.add(scan.nextLine().trim());
 
+	scan.close();
 
 	return returnList;
     }
@@ -78,12 +85,18 @@ public class DataManager implements DataManagerInterface
 
     public void addParticipant(String fName, String lName, String city)
     {
-	friendGraph.addVertex(new Friend(fName, lName, city));
+	Friend f = new Friend(fName, lName, city);
+	if(!friendGraph.containsVertex(f))
+	    friendGraph.addVertex(f);
     }
 
     public void addFriend(String profile, String newFriend)
     {
-	friendGraph.addEdge(new Friend(profile),  new Friend(newFriend));
+	Friend f1 = new Friend(profile);
+	Friend f2 = new Friend(newFriend);
+
+	if(!f1.equals(f2) && !friendGraph.containsEdge(f1, f2))
+	    friendGraph.addEdge(f1, f2);
     }
 
     public void addFriend(String profileFname, String profileLname,
@@ -95,14 +108,76 @@ public class DataManager implements DataManagerInterface
 
     public void populateParticipants(File participantsFile)throws FileNotFoundException
     {
-	// TODO Auto-generated method stub
+	//Scanner to read from the selected file
+	Scanner inputFile = null;
 
+	StringTokenizer tokens = null;
+
+	//Try to create a new Scanner
+	try
+	{
+	    inputFile = new Scanner(participantsFile);
+	}
+	catch (FileNotFoundException e)
+	{
+	    e.printStackTrace();
+	}
+
+	//Read each line in the text file
+	while(inputFile.hasNext())
+	{
+	    tokens = new StringTokenizer(inputFile.nextLine(), ":");
+
+	    while(tokens.hasMoreTokens())
+	    {
+		addParticipant(tokens.nextToken(), tokens.nextToken(), tokens.nextToken());
+	    }
+	}
+
+	//Close the file
+	inputFile.close();
     }
 
     public void populateFriends(File friendsFile) throws FileNotFoundException
     {
-	// TODO Auto-generated method stub
+	//Scanner to read from the selected file
+	Scanner inputFile = null;
+	StringTokenizer tokens = null;
+
+	String fName, lName, homeTown, f, l, h;
+	int friends;
+
+	//Try to create a new Scanner
+	try
+	{
+	    inputFile = new Scanner(friendsFile);
+	}
+	catch (FileNotFoundException e)
+	{
+	    e.printStackTrace();
+	}
+
+	//Read each line in the text file
+	while(inputFile.hasNextLine())
+	{
+	    tokens = new StringTokenizer(inputFile.nextLine(), ":");
+
+	    fName = tokens.nextToken();
+	    lName = tokens.nextToken();
+	    homeTown = friendGraph.getHomeTown(fName, lName);
+	    friends = Integer.parseInt(tokens.nextToken());
+
+	    while(tokens.hasMoreTokens())
+	    {
+		f = tokens.nextToken();
+		l = tokens.nextToken();
+		h = friendGraph.getHomeTown(f, l);
+		addFriend(fName, lName, homeTown, f, l, h);
+	    }
+	}
+
+	//Close the file
+	inputFile.close();
 
     }
-
 }

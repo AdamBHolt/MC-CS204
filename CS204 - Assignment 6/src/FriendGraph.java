@@ -44,7 +44,7 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
 	if(sourceVertex==null || targetVertex==null)
 	    throw new NullPointerException();
 
-	if(containsVertex(sourceVertex))
+	if(containsVertex(sourceVertex) && containsVertex(targetVertex))
 	{
 	    if(!containsEdge(sourceVertex, targetVertex))
 	    {
@@ -154,5 +154,13 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
     public Set<Friend> vertexSet()
     {
 	return adjacencyList.keySet();
+    }
+    
+    public String getHomeTown(String fName, String lName)
+    {
+	for(Friend f : vertexSet())
+	    if(f.equals(fName + " " + lName))
+		return f.getHomeTown();
+	return null;
     }
 }
