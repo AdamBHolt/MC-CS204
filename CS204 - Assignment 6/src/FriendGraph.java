@@ -57,8 +57,10 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
      * @param sourceVertex The originating vertex
      * @param targetVertex The target vertex
      * @return The Edge<Friend, Friend> object if the edge was added, otherwise null
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
      */
-    public Edge<Friend, Friend> addEdge(Friend sourceVertex, Friend targetVertex)
+    public Edge<Friend, Friend> addEdge(Friend sourceVertex, Friend targetVertex) throws NullPointerException, IllegalArgumentException
     {
 	//If either vertex is null throw a NullPointerException
 	if(sourceVertex==null || targetVertex==null)
@@ -117,6 +119,12 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
 
 	    //Check each edge in the adjacency list
 	    for(Edge<Friend, Friend> e : adjacencyList.get(sourceVertex))
+		//If the edge is found return true
+		if(e.equals(tempEdge))
+		    return true;
+
+	    //Check each edge in the adjacency list
+	    for(Edge<Friend, Friend> e : adjacencyList.get(targetVertex))
 		//If the edge is found return true
 		if(e.equals(tempEdge))
 		    return true;
@@ -187,12 +195,16 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
 		//Delete the edge when it is found
 		if(e.equals(tempEdge))
 		    adjacencyList.get(sourceVertex).remove(e);
-
+ 
 	    //Check through each edge of the target vertex
 	    for(Edge<Friend, Friend> e : adjacencyList.get(targetVertex))
 		//Delete the edge when it is found
 		if(e.equals(tempEdge))
+		{
 		    adjacencyList.get(targetVertex).remove(e);
+		    return tempEdge;
+		}
+	    
 	    //Return the temporary edge
 	    return tempEdge;
 	}
@@ -243,7 +255,7 @@ public class FriendGraph implements GraphInterface<Friend, Edge<Friend, Friend>>
 	return adjacencyList.keySet();
     }
 
-    
+
     /**
      * Get the hometown of a Friend in the graph based on the first and last names
      * @param fName First name of the Friend
