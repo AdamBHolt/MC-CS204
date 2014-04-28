@@ -1,7 +1,7 @@
 import java.util.*;
 
 /**
- * This class represents a Friend in a program that is a social network of Friends
+ * This class represents a Friend in a program that manages a social network of Friends
  * The Friend objects act as vertices in a graph of Friend connections
  * @author Adam Holt
  * @date 4/27/14
@@ -48,12 +48,15 @@ public class Friend implements Comparable<Friend>
      */
     public Friend(String n)
     {
+	//Scanner to get the tokens from the String
 	Scanner scan = new Scanner(n);
 	
+	//Scan the String and set each member based on the tokens
 	setFirstName(scan.next());
 	setLastName(scan.next());
 	scan.next();
 	setHomeTown(scan.nextLine().trim());
+	//Close the scanner
 	scan.close();
     }
     

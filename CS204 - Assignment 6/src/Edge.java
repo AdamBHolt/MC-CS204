@@ -1,6 +1,6 @@
 /**
  * This class represents an edge in a graph and is used to show connections
- * in a program that is a social network of Friends
+ * in a program that manages a social network of Friends
  * @author Adam Holt
  * @date 4/27/14
  * @class CS204
